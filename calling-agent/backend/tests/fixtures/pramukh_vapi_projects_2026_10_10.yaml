@@ -1,0 +1,404 @@
+# Pramukh Group — Vapi projects: the owner's fact sheet (pasted 2026-10-07,
+# re-sent unchanged 2026-10-10), spelling and formatting corrected. SOURCE
+# OBJECT for the seven per-project agents built by
+# deploy/build_pramukh_projects.py (RUNBOOK §68) and for the "Ravi test"
+# agent (deploy/build_pramukh_vedanta_test.py, §71). Every agent carries ALL
+# of these as shared knowledge and pitches only its own. The human-readable
+# copy of the same sheet is docs/Pramukh Project Details.md (§72) — edit
+# BOTH, then re-run the builders with --apply --mirror.
+#
+# 2026-10-10 (§72): facts not on the sheet were taken OUT so the agents say
+# only what the owner wrote — Swarit's "opposite Pramukh Sahaj" and its plot
+# sizes (from Ravi's older brief); Vivan's "9 buildings" is now stated as the
+# sheet has it. The Vedanta test agent's private fact-set (5.9 acres, Survey
+# No. 1702, under construction only, clubhouse/pool) is gone: it reads this
+# item like the other seven.
+#
+# Corrections made to the pasted sheet (typos only — no number was changed):
+#   Rajahn Cinema → Rajhans Cinema · Coffee café Days → Café Coffee Day ·
+#   Star Buck → Starbucks · TBZ Jwellers → TBZ Jewellers · Bedmitan coat →
+#   badminton court · Coat → court · Laung → lounge · Aear → area ·
+#   Resedent → residential · Posession → possession · Childre's/Childern's →
+#   children's · Enterence → entrance · Banglow → bungalow · Gameing → gaming ·
+#   Mediation → meditation · Out Side Setting → outdoor seating · Jogging
+#   Trek → jogging track · Collage → College · MacDonalds → McDonald's ·
+#   Jeevandip → Jeevandeep.
+# Ambiguities kept OUT of what the agent may assert (see `not_published` /
+# `sheet_notes` on each project):
+#   * Vivan — "9 buildings" and "5 towers" are both on the sheet.
+#   * Aristo — the 4 BHK price is cut off ("90 lakhs 3 bhk and").
+#   * Blue Stone — total land area is blank; commercial shop sizes/prices absent.
+#   * Green County — "Highway No 42" next to "NH-48"; Vapi sits on NH-48, so
+#     the landmark is written as NH-48. "Apple" after Kidz Hospital is unclear
+#     and is left out.
+#   * Vedanta — floor height "10.03/11 ft" is rendered as about 10 to 11 ft.
+#   * Swarit — this sheet prices the 4 BHK at about ₹2.15 Cr and the 5 BHK at
+#     ₹2.35–3.70 Cr; Ravi's (outbound_lead_qualifier) older sheet says
+#     ₹2.50–3.50 Cr. This file follows the newer sheet.
+#
+# `budget_lakhs` is DATA for the budget-fit check (pitch_switch.py); it never
+# reaches the prompt. `agent` is the persona that pitches the project.
+
+chala_nearby: &chala_nearby
+  - Zudio
+  - Westside
+  - Rajhans Cinema
+  - Pantaloons
+  - Café Coffee Day
+  - KFC
+  - Starbucks
+  - Cantabil
+  - Croma
+  - Nike
+  - Puma
+  - Anant Cinema
+  - TBZ Jewellers
+
+projects:
+- key: vedanta
+  agent: {en: Ravi, hi: रवि, gu: રવિ, gender: male}
+  item:
+    id: pramukh-vedanta
+    name: Pramukh Vedanta
+    aliases: [Vedanta, Vedant, Pramukh Vedant]
+    location: New Chala, Vapi
+    address: Muktanand Marg, New Chala, Vapi
+    project_type: residential apartments — 3 BHK, 4 BHK and Ultra 4 BHK
+    configurations: [3 BHK, 4 BHK, Ultra 4 BHK]
+    price_range: about ₹1.75 Cr (the Ultra 4 BHK, 3,890 sq ft super built-up — the only home available right now)
+    budget_lakhs: [175, 175]
+    availability: under construction and ready possession, both
+    status: only the Ultra 4 BHK (3,890 sq ft super built-up) is available now; 3 BHK and 4 BHK are not currently available
+    pitch_points:
+    - the highest floor height in town — about 10 to 11 feet (give the figure only when asked)
+    - the most open space in its segment — about 70% of the land is open
+    - three parking spaces
+    - a private lift and private passage
+    specifications:
+      buildings: 7 — five of 12 floors and two of 11 floors
+      land: 6 acres, including the open amenity areas
+      3 BHK: 1,965–2,335 sq ft super built-up; carpet about 1,179–1,401 sq ft
+      4 BHK: 3,270–3,355 sq ft super built-up; carpet about 1,962–2,013 sq ft
+      Ultra 4 BHK: 3,890 sq ft super built-up; carpet about 2,225 sq ft
+    amenities:
+    - gymnasium
+    - library
+    - separate spa for women and for men
+    - banquet hall
+    - a 3 BHK guest house
+    - games zone
+    - café
+    - theatre
+    - disco / party hall
+    - Jain derasar
+    - temple
+    - four kinds of courts — basketball, volleyball, net cricket and badminton
+    - building-wise amenities — gaming room, lounge and sitting area
+    connectivity:
+    - Vapi railway station about 2 km
+    - airport about 8.2 km
+    landmarks: *chala_nearby
+    not_published:
+    - prices of the 3 BHK and 4 BHK (not currently available)
+    - possession date
+    - RERA number
+
+- key: blue_stone
+  agent: {en: Prashant, hi: प्रशांत, gu: પ્રશાંત, gender: male}
+  item:
+    id: pramukh-blue-stone
+    name: Pramukh Blue Stone
+    aliases: [Blue Stone, Bluestone, Blue Stones]
+    location: New Chala, Vapi
+    address: Muktanand Marg, New Chala, Vapi
+    project_type: residential 2 and 3 BHK apartments, plus commercial shops
+    configurations: [2 BHK, 3 BHK, Commercial shops]
+    price_range: about ₹50–55 lakh (2 BHK); ₹60 lakh onwards (3 BHK)
+    budget_lakhs: [50, 65]
+    availability: under construction — possession coming soon
+    pitch_points:
+    - spacious 2 BHK homes
+    - two car parkings with every 3 BHK
+    - a commercial-cum-residential project
+    - one of the best locations in Vapi
+    specifications:
+      buildings: 5 buildings, 7 wings
+      2 BHK: 1,360 sq ft super built-up; carpet about 816 sq ft
+      3 BHK: 1,535 sq ft super built-up; carpet about 921 sq ft
+    amenities:
+    - gymnasium
+    - banquet hall
+    - open garden
+    - multipurpose court
+    - sitting area
+    - net cricket
+    - jogging track
+    - tree pits
+    connectivity:
+    - Vapi railway station about 2 km
+    - airport about 8.2 km
+    landmarks: *chala_nearby
+    not_published:
+    - total land area
+    - commercial shop sizes and prices
+    - exact possession date
+    - RERA number
+  sheet_notes: land area blank on the sheet
+
+- key: vivan
+  agent: {en: Vijeta, hi: विजेता, gu: વિજેતા, gender: female}
+  item:
+    id: pramukh-vivan
+    name: Pramukh Vivan
+    aliases: [Vivan, Vivaan, Pramukh Vivaan]
+    location: New Chala, Vapi
+    address: Muktanand Marg, New Chala, Vapi
+    project_type: residential 1.5 BHK and 2 BHK apartments
+    configurations: [1.5 BHK, 2 BHK (sold out)]
+    price_range: about ₹35–37 lakh (1.5 BHK)
+    budget_lakhs: [35, 37]
+    availability: ready to move
+    status: the 2 BHK homes are sold out — say so only when someone asks about a 2 BHK
+    pitch_points:
+    - the first ready-to-move 1.5 BHK in Vapi
+    - terrace penthouses
+    - a temple in the project
+    specifications:
+      buildings: 9 buildings of 14 floors
+      land: 3.5 acres
+      1.5 BHK: 960, 975 or 990 sq ft super built-up; carpet about 576–594 sq ft
+      2 BHK: 1,110–1,170 sq ft super built-up; carpet about 666–702 sq ft (sold out)
+    amenities:
+    - gymnasium
+    - banquet hall
+    - event lawn
+    - indoor games
+    - children's play area
+    - net cricket
+    - temple
+    - senior citizens' area
+    - multipurpose court
+    - drop-off zone
+    connectivity:
+    - Vapi railway station about 2 km
+    - airport about 8.2 km
+    landmarks: *chala_nearby
+    not_published:
+    - terrace penthouse prices
+    - RERA number
+  sheet_notes: "sheet says '9 buildings (14 floors)' and '3.5 acres (with 5 towers)' — 9 is what the agent says"
+
+- key: aristo
+  agent: {en: Prashant, hi: प्रशांत, gu: પ્રશાંત, gender: male}
+  item:
+    id: pramukh-aristo
+    name: Pramukh Aristo
+    aliases: [Aristo, Aristo Vapi]
+    location: Chala, Vapi
+    address: Near Dabhel Check Post, Chala, Vapi
+    project_type: residential 3 and 4 BHK apartments
+    configurations: [3 BHK, 4 BHK]
+    price_range: about ₹90 lakh (3 BHK); 4 BHK price from the team
+    budget_lakhs: [90, 90]
+    availability: ready to move
+    pitch_points:
+    - amenities on the terrace
+    - ready to move
+    - limited homes — only 80 units
+    - a main-road location
+    - Daman is within walking distance
+    specifications:
+      buildings: 2 buildings of 10 floors
+      land: 1 acre
+      units: 80
+      3 BHK: 2,320 sq ft super built-up; carpet about 1,392 sq ft
+      4 BHK: 2,845 sq ft super built-up; carpet about 1,707 sq ft
+    amenities:
+    - kids' pool
+    - toddler play area
+    - mini golf
+    - multipurpose hall
+    - event lawn
+    - zen garden
+    - indoor games
+    - children's play area with pavilion
+    - gazebo
+    - yoga / meditation deck
+    - outdoor seating area
+    - shower area
+    - cafeteria with open seating
+    - pathway
+    - water body with deck
+    - swimming pool with water cascade
+    - poolside sit-out
+    - changing rooms for men and women
+    - senior citizens' plaza with deck
+    connectivity:
+    - Vapi railway station about 2 km
+    - airport about 8.2 km
+    - Daman within walking distance
+    landmarks: *chala_nearby
+    not_published:
+    - 4 BHK price
+    - RERA number
+  sheet_notes: 4 BHK price cut off on the sheet
+
+- key: silver_stone
+  agent: {en: Ravi, hi: रवि, gu: રવિ, gender: male}
+  item:
+    id: pramukh-silver-stone
+    name: Pramukh Silver Stone
+    aliases: [Silver Stone, Silverstone, Silver Stones]
+    location: New Chala, Vapi
+    address: Behind Pramukh Blue Stone, New Chala, Vapi
+    project_type: residential 3 and 4 BHK apartments
+    configurations: [3 BHK, 4 BHK]
+    price_range: about ₹95 lakh (3 BHK); about ₹1.20 Cr (4 BHK)
+    budget_lakhs: [95, 120]
+    availability: under construction
+    pitch_points:
+    - only 120 homes
+    - spacious 3 and 4 BHK homes
+    - a prime location in Vapi
+    specifications:
+      buildings: 3 buildings of 10 floors
+      land: 2 acres
+      units: 120
+      3 BHK: 2,320 sq ft super built-up; carpet about 1,392 sq ft
+      4 BHK: 3,040 sq ft super built-up; carpet about 1,824 sq ft
+    amenities:
+    - multipurpose hall
+    - event lawn
+    - garden
+    - children's play area
+    - badminton court
+    - sitting area
+    - multipurpose court
+    connectivity:
+    - Vapi railway station about 2 km
+    - airport about 8.2 km
+    landmarks: *chala_nearby
+    not_published:
+    - possession date
+    - RERA number
+
+- key: swarit
+  agent: {en: Akshay, hi: अक्षय, gu: અક્ષય, gender: male}
+  item:
+    id: pramukh-swarit
+    name: Pramukh Swarit
+    aliases: [Swarit, Swarit Bungalows, Pramukh Swarit Bungalows, Swarit Vapi]
+    location: New Chala, Vapi
+    address: Behind Pramukh Vivan, New Chala, Vapi
+    project_type: luxury bungalows — independent homes, not apartments
+    configurations: [4 BHK, 5 BHK]
+    price_range: about ₹2.15 Cr (4 BHK); ₹2.35–3.70 Cr (5 BHK)
+    budget_lakhs: [215, 370]
+    availability: ready to move — every bungalow is ready
+    rera: PR/GJ/VALSAD/PARDI/Others/RAA10449/140722
+    pitch_points:
+    - all the bungalows are ready
+    - every bungalow has its own terrace
+    - a lift provision in every bungalow
+    - 25-foot internal roads
+    specifications:
+      bungalows: 46, each ground plus two floors
+      land: 4.5 acres
+      4 BHK: 5,010 sq ft super built-up
+      5 BHK: 5,635–6,880 sq ft super built-up
+    amenities:
+    - entrance pergola
+    - planters with seating
+    - senior citizens' seating area
+    - tennis court
+    - children's play area
+    - badminton court
+    - plantation
+    - cricket pitch
+    - garden
+    - event lawn
+    - event hall
+    - club house
+    - swimming pool
+    connectivity:
+    - Vapi railway station about 2 km
+    - airport about 8.2 km
+    landmarks: *chala_nearby
+    not_published:
+    - floor plans
+    - per-bungalow pricing beyond the ranges above
+
+- key: green_county
+  agent: {en: Dhaval, hi: धवल, gu: ધવલ, gender: male}
+  item:
+    id: pramukh-green-county
+    name: Pramukh Green County
+    aliases: [Green County, Green Country, Pramukh Green Country, Green Count]
+    location: Chharwada, Vapi
+    address: Near Gunjan area, Chharwada, Vapi
+    project_type: low-rise residential 3 and 4 BHK apartments
+    configurations: [3 BHK, 4 BHK]
+    price_range: about ₹78–85 lakh (3 BHK); about ₹1.12 Cr (4 BHK)
+    budget_lakhs: [78, 112]
+    availability: under construction and ready to move, both
+    pitch_points:
+    - a 27,000 sq ft, ground-plus-three clubhouse — the biggest in Vapi
+    - more than 50% open space
+    - low-rise buildings, up to the 5th floor only
+    - two lifts in every low-rise building
+    - about 7–8 km from the bullet train station
+    - connectivity to the new ring road and the NH-48 highway
+    specifications:
+      buildings: 19 buildings, up to the 5th floor
+      land: 12 acres
+      3 BHK: 2,070–2,270 sq ft super built-up; carpet about 1,242–1,362 sq ft
+      4 BHK: 3,020–3,025 sq ft super built-up; carpet about 1,812–1,815 sq ft
+    amenities:
+    - entrance feature
+    - water feature
+    - party lawn
+    - cafeteria
+    - garden
+    - kids' play area
+    - seating areas
+    - temple area
+    - basketball court
+    - amphitheatre
+    - semi-covered seating
+    - trampoline park
+    - dense planting with seating
+    - yoga and meditation area
+    - mini golf course
+    - shaded seating
+    - indoor swimming pool
+    - gym
+    - steam and sauna
+    - spa
+    - Dolby theatre
+    - meeting / conference room
+    - library
+    - indoor games
+    - toddler play area
+    - café
+    - disco and dance studio
+    connectivity:
+    - Vapi railway station about 2.5 km
+    - airport about 18.5 km
+    - bullet train station about 7–8 km
+    - new ring road and NH-48
+    landmarks:
+    - NH-48
+    - Haria Hospital
+    - Gyandham School
+    - Jeevandeep Hospital
+    - Kidz Hospital
+    - Rofel College
+    - Starbucks
+    - KFC
+    - McDonald's
+    - Kala Mandir
+    - Galaxy Shopping Centre
+    not_published:
+    - possession date for the under-construction buildings
+    - RERA number
+  sheet_notes: "'Highway No 42' read as NH-48; 'Apple' after Kidz Hospital left out"

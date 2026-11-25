@@ -1,0 +1,42 @@
+<!--
+  FreeSWITCH event socket — HARDENED template (P-1/S1).
+  Install to: /etc/freeswitch/autoload_configs/event_socket.conf.xml
+  Cutover procedure: deploy/RUNBOOK.md §23.
+
+  What was wrong before:
+    listen-ip="::"            -> bound every interface, v4 and v6
+    password="ClueCon"        -> FreeSWITCH's published vendor default
+    apply-inbound-acl         -> commented out, so no ACL applied at all
+
+  Anyone who could reach tcp/8021 could therefore issue `originate` and place
+  unlimited calls on the Plivo trunk, attributed to no tenant and billed to us.
+  The event socket is a dial credential; treat it like one.
+
+  The password below is a PLACEHOLDER. Generate the real one with
+
+      openssl rand -hex 32
+
+  and write the SAME value into /etc/lescall/telephony.env as
+  FS_ESL_PASSWORD — shared/fs_esl.py refuses to authenticate with the vendor
+  default, an empty value, or anything shorter than 16 characters, so a
+  half-finished rotation fails loudly at the first originate rather than
+  quietly leaving the door open.
+-->
+<configuration name="event_socket.conf" description="Socket Client">
+  <settings>
+    <!-- Loopback only. Every consumer (dashboard/server.py, shared/sentinel.py,
+         socket_server.py) runs on this host or in a network_mode:host
+         container, so nothing legitimate needs an external bind. -->
+    <param name="listen-ip" value="127.0.0.1"/>
+    <param name="listen-port" value="8021"/>
+    <param name="password" value="REPLACE_ME_WITH_openssl_rand_hex_32"/>
+
+    <!-- Second lock: even on loopback, only loopback sources may authenticate.
+         loopback.auto is defined in autoload_configs/acl.conf.xml and resolves
+         to the host's own loopback addresses. -->
+    <param name="apply-inbound-acl" value="loopback.auto"/>
+
+    <!-- Do not hold a half-open socket forever. -->
+    <param name="stop-on-bind-error" value="true"/>
+  </settings>
+</configuration>

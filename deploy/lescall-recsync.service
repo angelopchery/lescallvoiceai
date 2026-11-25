@@ -1,0 +1,23 @@
+# Catch-up GCS sync + local retention cleanup for call recordings.
+# Install:
+#   sudo cp deploy/lescall-recsync.{service,timer} /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now lescall-recsync.timer
+[Unit]
+Description=LesCall recording sync (GCS upload catch-up + local cleanup)
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=angelo
+WorkingDirectory=/home/angelo/lescall
+EnvironmentFile=/home/angelo/lescall/deploy/.pg_env
+# Force metadata ADC. systemd sets HOME=/home/angelo for User=angelo, so
+# google.auth would find ~/.config/gcloud/application_default_credentials.json
+# and prefer it over the VM's attached service account — which is exactly how
+# a dead user token stalled uploads for 17 days in July 2026, and how this
+# unit was still failing auth on 2026-08-07 while reporting success.
+# Pointing CLOUDSDK_CONFIG at a nonexistent dir means no future
+# `gcloud auth application-default login` can shadow metadata again.
+# See RUNBOOK §6b.
+Environment=CLOUDSDK_CONFIG=/nonexistent
+ExecStart=/home/angelo/lescall/calling-agent/venv/bin/python -m shared.recording_storage --once

@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "shadcn": "^2.10.0"
+  },
+  "//": "shadcn MUST stay on 2.x \u2014 the 3.x+ CLI targets Tailwind v4 and rewrites tailwind.config.ts (this project is on v3). See CLAUDE.md."
+}

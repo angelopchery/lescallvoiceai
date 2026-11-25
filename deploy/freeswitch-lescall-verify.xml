@@ -1,0 +1,21 @@
+<!--
+  Number-verification announce extension (caller-ID ownership proof).
+  Install at /etc/freeswitch/dialplan/default/lescall_verify.xml then
+  fs_cli -x reloadxml. The dashboard originates a call TO the number being
+  verified, into this extension, passing the OTP as lescall_verify_code; the
+  person who answers hears the code and enters it in the panel, proving they
+  control the number. Static + tenant-agnostic — safe for all tenants.
+-->
+<include>
+  <extension name="lescall_verify">
+    <condition field="destination_number" expression="^lescall_verify$">
+      <action application="answer"/>
+      <action application="sleep" data="800"/>
+      <action application="say" data="en number iterated ${lescall_verify_code}"/>
+      <action application="sleep" data="600"/>
+      <action application="say" data="en number iterated ${lescall_verify_code}"/>
+      <action application="sleep" data="400"/>
+      <action application="hangup"/>
+    </condition>
+  </extension>
+</include>

@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-08-12",
+  "note": "Verbatim copies of live platform content — see build_corpus.py.",
+  "documents": [
+    {
+      "name": "dhronai_profile",
+      "title": "DhronAI Company Knowledge Base — Sales Enablement Guide",
+      "kind": "document",
+      "source": "calling-agent/agents/dhron_calling/documents/eb0bfae02d/text.txt",
+      "sha256": "26f077a452c148ed82982e336889ff6933a197a7919a68d5a9b9f4678becb4c4",
+      "chars": 7546
+    },
+    {
+      "name": "dhron_ai_angelobot",
+      "title": "Dhron AI — engineer introduction (near-duplicate distractor)",
+      "kind": "knowledge_base",
+      "source": "calling-agent/agents/angelobot/agent.yaml",
+      "sha256": "a38fbc0f2612417f329543a769acdd6d05ddb9f074ed1ed3013d05aa50e6cb81",
+      "chars": 837,
+      "redacted": "truncated at 'Salary facts' (personal data)"
+    },
+    {
+      "name": "gamezone_india",
+      "title": "GameZone India — Nintendo Switch console catalogue",
+      "kind": "knowledge_base",
+      "source": "calling-agent/agents/nintendo_gamer/agent.yaml",
+      "sha256": "13ede6edb48892c55ec5e24f5a1dbe7081a4f8522e3c7e59c9dc9e2f75e755a1",
+      "chars": 3234
+    },
+    {
+      "name": "nike_india",
+      "title": "Nike — footwear catalogue",
+      "kind": "knowledge_base",
+      "source": "calling-agent/agents/nike_shoe_specialist/agent.yaml",
+      "sha256": "2369061d19a6a4bb3dab54701f93ec23b4323e2407adf7aee66c52cc92722564",
+      "chars": 1387
+    },
+    {
+      "name": "kaapadh_fabrics",
+      "title": "Kaapadh Fabrics — fabric knowledge base",
+      "kind": "knowledge_base",
+      "source": "calling-agent/agents/kaapdfabrics/agent.yaml",
+      "sha256": "80785ecba8caf0882a4d4e23789cc3131b5ef3352cc9889b8b4fef4d6af01ac5",
+      "chars": 1386
+    },
+    {
+      "name": "b2_market",
+      "title": "B2 Market — product knowledge base",
+      "kind": "knowledge_base",
+      "source": "calling-agent/agents/hardik-outbound/agent.yaml",
+      "sha256": "4c3f2a54a85659af07f65fc62c08457640ca300ebcbc426376c64ec8ec6e90c2",
+      "chars": 1245
+    },
+    {
+      "name": "serene_health",
+      "title": "Serene Health Clinics — specialist directory",
+      "kind": "knowledge_base",
+      "source": "calling-agent/agents/serene_health/agent.yaml",
+      "sha256": "4dc2f9302ddaab00945af8a0949dc6af2f4ad93abd0cd2c7f476570536209632",
+      "chars": 1040
+    },
+    {
+      "name": "horizon_homes",
+      "title": "Horizon Homes — project portfolio",
+      "kind": "knowledge_base",
+      "source": "calling-agent/agents/demo_realty/agent.yaml",
+      "sha256": "75d61552dfb80d33c5ade12a35e657bd43f768703187a5990788a89321771731",
+      "chars": 760
+    },
+    {
+      "name": "pramukh_group",
+      "title": "Pramukh Group — project portfolio",
+      "kind": "knowledge_base",
+      "source": "calling-agent/agents/pramukh/agent.yaml",
+      "sha256": "7121433671f894e4fe410f85da74346a5208521223ce92c1637926ea93fcc3cd",
+      "chars": 632
+    },
+    {
+      "name": "dhron_eye",
+      "title": "Dhron Eye — product portfolio",
+      "kind": "knowledge_base",
+      "source": "calling-agent/agents/shubhanga/agent.yaml",
+      "sha256": "45aaa7371fbfd3be43443ddf7dcce9ed151702ddd78beb673de2d0ea0eb7601f",
+      "chars": 1383
+    }
+  ]
+}

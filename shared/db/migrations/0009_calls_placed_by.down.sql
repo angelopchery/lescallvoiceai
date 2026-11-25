@@ -1,0 +1,2 @@
+ALTER TABLE calls DROP COLUMN IF EXISTS placed_by;
+ALTER TABLE call_links DROP COLUMN IF EXISTS placed_by;

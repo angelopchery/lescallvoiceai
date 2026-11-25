@@ -1,0 +1,10 @@
+# Companion to lescall-kamailio-reload.path — reloads the permissions address
+# table when the trigger file is touched. 1s sleep debounces bursts of touches.
+[Unit]
+Description=Reload Kamailio permissions address table
+After=kamailio.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sleep 1
+ExecStart=/usr/sbin/kamcmd permissions.addressReload

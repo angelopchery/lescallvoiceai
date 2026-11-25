@@ -1,0 +1,53 @@
+annotated-doc==0.0.4
+sarvamai>=0.1.28
+annotated-types==0.7.0
+anthropic==0.52.0
+anyio==4.13.0
+certifi==2026.2.25
+cffi==2.0.0
+click==8.3.2
+colorama==0.4.6
+distro==1.9.0
+fastapi==0.136.0
+h11==0.16.0
+httpcore==1.0.9
+httptools==0.7.1
+httpx==0.28.1
+idna==3.11
+jiter==0.14.0
+numpy==2.4.4
+openai==2.32.0
+pycparser==3.0
+pydantic==2.13.2
+pydantic_core==2.46.2
+pdfplumber>=0.11.0
+python-docx>=1.1.0
+# Excel uploads (Agent Builder documents). The app image already installed it
+# by hand in deploy/Dockerfile.app; declared here so the venv matches.
+openpyxl>=3.1
+python-dotenv==1.2.2
+python-multipart>=0.0.9
+PyYAML==6.0.3
+RapidFuzz==3.14.5
+sniffio==1.3.1
+sounddevice==0.5.5
+starlette==1.0.0
+tqdm==4.67.3
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+uvicorn==0.45.0
+watchfiles==1.1.1
+websockets==16.0
+psycopg[binary]==3.3.4
+google-cloud-storage==3.12.1
+# VAD stack (deploy/PLAN-vad-stack.md): WebRTC pre-filter + FSMN-VAD onnx.
+# Model files are vendored at data/models/fsmn_vad (Apache-2.0) — no hub
+# download at boot. funasr_onnx itself is installed in Dockerfile.app with
+# --no-deps: it declares a stale numpy<=1.26.4 cap but is runtime-verified
+# on the 2.4.4 pin above (full FSMN inference exercised). Its REAL deps:
+webrtcvad-wheels==2.0.14  # manylinux wheel; import name is still `webrtcvad`
+onnxruntime==1.28.0
+kaldi-native-fbank==1.22.3
+librosa==0.11.0
+sentencepiece==0.2.2
+jieba==0.42.1

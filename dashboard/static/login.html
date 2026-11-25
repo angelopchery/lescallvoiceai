@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050a07">
+<title>Sign in · LesCall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Sora:wght@400;500;600&display=swap">
+<style>
+  /* ---------------------------------------------------------------------
+     LesCall sign-in.
+
+     The page is a phone line with a conversation on it. Two waveform bands
+     — the caller along the top edge, the agent along the bottom — take
+     turns: one speaks while the other rests, they pause between, and now
+     and then they overlap. That is the actual behaviour of this product
+     (turn detection, barge-in), drawn rather than described, and it is the
+     only thing on the page allowed to be loud.
+
+     Everything else is deliberately quiet: no card, no feature list, no
+     terminal prop. One action, one headline, one mark.
+     --------------------------------------------------------------------- */
+  :root {
+    --void:     #050a07;   /* the stage */
+    --ink:      #0b1410;   /* raised surface (the error box) */
+    --mint:     #1dbf67;   /* brand */
+    --mint-hot: #4ff09a;   /* the agent band's hot end */
+    --haze:     #8fb9a2;   /* secondary text */
+    --paper:    #f2f7f4;   /* primary text */
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--void);
+    color: var(--paper);
+    font-family: "Sora", system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    /* The canvas is fixed, so nothing here scrolls in normal use. Allowing
+       vertical scroll only matters on a very short viewport, where clipping
+       the sign-in button would be the worse failure. */
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* The live conversation. Sized to devicePixelRatio in JS so the bars stay
+     crisp from a phone up to a 4K panel. */
+  #stage {
+    position: fixed; inset: 0; z-index: 0;
+    display: block;
+    opacity: 0;
+    animation: wake 1.4s .1s ease-out forwards;
+  }
+
+  /* Ambient bloom behind each band. A CSS layer rather than a per-bar
+     shadowBlur — same depth, none of the per-frame cost on a 4K canvas. */
+  .bloom {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(120% 42% at 50% -8%,  rgba(143, 185, 162, .16), transparent 70%),
+      radial-gradient(130% 48% at 50% 108%, rgba(29, 191, 103, .26), transparent 70%);
+  }
+
+  /* ---- layout -------------------------------------------------------- */
+
+  .mark {
+    position: fixed; z-index: 3;
+    top: clamp(22px, 4vh, 44px);
+    left: clamp(22px, 4vw, 56px);
+    font-family: "Anton", Impact, sans-serif;
+    font-size: clamp(19px, 1.7vw, 25px);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--paper);
+    /* The caller band reaches ~42px down at this inset on a narrow phone.
+       The shadow is what keeps the mark legible where the bars cross it. */
+    text-shadow: 0 2px 14px rgba(5, 10, 7, .95);
+  }
+  .mark b { font-weight: inherit; color: var(--mint); }
+
+  main {
+    position: relative; z-index: 2;
+    min-height: 100vh; min-height: 100dvh;
+    display: grid; place-items: center;
+    padding: clamp(96px, 24vh, 300px) clamp(20px, 5vw, 40px);
+  }
+
+  .stack {
+    width: 100%;
+    max-width: 640px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+  }
+
+  /* The display block. Two short lines, tight leading, one colour — the
+     waveform carries the emphasis, so the type does not need a coloured
+     word to do it. */
+  h1 {
+    font-family: "Anton", Impact, sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: clamp(46px, 11vw, 132px);
+    line-height: .88;
+    letter-spacing: .005em;
+    color: var(--paper);
+  }
+  h1 span { display: block; }
+
+  .orient {
+    margin-top: clamp(16px, 2.4vh, 26px);
+    color: var(--haze);
+    font-size: clamp(13.5px, 1.15vw, 15.5px);
+  }
+
+  /* ---- the one action ------------------------------------------------ */
+
+  .signin {
+    position: relative;
+    margin-top: clamp(28px, 4.2vh, 46px);
+    display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+    width: 100%; max-width: 330px;
+    padding: 15px 24px;
+    border: 0; border-radius: 999px;
+    background: var(--paper);
+    color: #0a1a10;
+    font: 600 15px "Sora", system-ui, sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 0 0 0 rgba(29, 191, 103, .55), 0 14px 40px -14px rgba(0, 0, 0, .9);
+    transition: transform .22s cubic-bezier(.2, .8, .3, 1),
+                box-shadow .32s cubic-bezier(.2, .8, .3, 1),
+                background-color .22s ease;
+  }
+  .signin:hover,
+  .signin:focus-visible {
+    transform: translateY(-2px);
+    background: #fff;
+    box-shadow: 0 0 0 7px rgba(29, 191, 103, .18), 0 18px 46px -14px rgba(0, 0, 0, .95);
+  }
+  .signin:focus-visible { outline: 2px solid var(--mint-hot); outline-offset: 5px; }
+  .signin:active { transform: translateY(0); }
+  .signin svg { flex: none; }
+
+  /* ---- error --------------------------------------------------------- */
+
+  #error {
+    display: none;
+    margin-top: clamp(24px, 3.4vh, 38px);
+    max-width: 46ch;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 138, 138, .3);
+    border-radius: 12px;
+    background: var(--ink);
+    color: #ffb3b3;
+    font-size: 13.5px;
+    text-align: left;
+  }
+  #error.on { display: block; }
+
+  /* ---- one orchestrated entrance ------------------------------------- */
+
+  @keyframes wake { to { opacity: 1; } }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .mark, .stack > * { animation: rise .8s cubic-bezier(.2, .8, .3, 1) backwards; }
+  .mark        { animation-delay: .10s; }
+  h1           { animation-delay: .18s; }
+  .orient      { animation-delay: .30s; }
+  .signin      { animation-delay: .40s; }
+
+  @media (max-width: 560px) {
+    .stack { max-width: 100%; }
+    h1 { font-size: clamp(42px, 15vw, 76px); }
+  }
+  /* Short landscape (a laptop at 1366×768, a phone on its side): the bands
+     eat the middle, so pull the type down a step. */
+  @media (max-height: 620px) {
+    h1 { font-size: clamp(34px, 7vh, 64px); }
+    main { padding-top: clamp(64px, 16vh, 120px); padding-bottom: clamp(64px, 16vh, 120px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #stage { opacity: 1; animation: none; }
+    .mark, .stack > * { animation: none; }
+    .signin { transition: box-shadow .2s ease, background-color .2s ease; }
+    .signin:hover, .signin:focus-visible { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stage" aria-hidden="true"></canvas>
+<div class="bloom" aria-hidden="true"></div>
+
+<div class="mark">Les<b>Call</b></div>
+
+<main>
+  <div class="stack">
+    <h1><span>Every call</span><span>answered</span></h1>
+    <p class="orient">Sign in to your dashboard</p>
+
+    <a class="signin" href="/auth/login" id="gbtn">
+      <svg width="19" height="19" viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Continue with Google
+    </a>
+
+    <div id="error" role="alert"></div>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------------------------------------------------------------------
+     The conversation.
+
+     Two bands of bars: the caller hangs from the top edge, the agent grows
+     from the bottom. A single turn-taking envelope drives their amplitude
+     so only one is really talking at a time, with a pause between turns and
+     a drifting overlap — the barge-in this pipeline spends so much effort
+     handling.
+
+     Bar heights come from three layered sines at incommensurate rates, so
+     the pattern never visibly repeats and reads as speech rather than as a
+     waveform toy.
+     --------------------------------------------------------------------- */
+
+  var cvs = document.getElementById("stage");
+  var ctx = cvs.getContext("2d", { alpha: true });
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  var W = 0, H = 0, step = 12, bandH = 160, gTop = null, gBot = null;
+  var raf = 0, boost = 1, boostTarget = 1;
+
+  var CYCLE = 8.4;      // seconds for one caller→agent→pause round
+  var FLOOR = 0.07;     // the line is never dead
+
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    cvs.width  = Math.round(W * dpr);
+    cvs.height = Math.round(H * dpr);
+    cvs.style.width  = W + "px";
+    cvs.style.height = H + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // Denser bars on wide screens, never so fine they turn into a smear.
+    step  = Math.max(9, Math.min(17, W / 105));
+    bandH = Math.max(72, Math.min(H * 0.22, 250));
+
+    gTop = ctx.createLinearGradient(0, 0, 0, bandH);
+    gTop.addColorStop(0,   "rgba(168, 216, 191, .70)");
+    gTop.addColorStop(.55, "rgba(143, 185, 162, .30)");
+    gTop.addColorStop(1,   "rgba(143, 185, 162, .03)");
+
+    gBot = ctx.createLinearGradient(0, H, 0, H - bandH);
+    gBot.addColorStop(0,   "rgba(79, 240, 154, .85)");
+    gBot.addColorStop(.5,  "rgba(29, 191, 103, .38)");
+    gBot.addColorStop(1,   "rgba(29, 191, 103, .03)");
+  }
+
+  function smooth(x) {                        // smoothstep, clamped
+    x = x < 0 ? 0 : x > 1 ? 1 : x;
+    return x * x * (3 - 2 * x);
+  }
+
+  /** 1 inside [a,b] of the cycle, easing in and out over `fade`. */
+  function turnWindow(p, a, b, fade) {
+    return Math.min(smooth((p - a) / fade), 1 - smooth((p - b) / fade));
+  }
+
+  /** Bar height in 0..1 at position x along the band. */
+  function speech(x, t, seed) {
+    var v = 0.52 * Math.sin(x * 10.7 + t * 2.10 + seed)
+          + 0.31 * Math.sin(x * 23.3 - t * 3.37 + seed * 1.7)
+          + 0.17 * Math.sin(x * 41.9 + t * 5.11 + seed * 2.3);
+    // Taper to nothing at both edges so the bands frame the page instead of
+    // colliding with the wordmark and the footer link.
+    var edge = Math.pow(Math.sin(Math.PI * x), 0.85);
+    return Math.abs(v) * edge;
+  }
+
+  function band(t, amp, seed, fromTop) {
+    ctx.fillStyle = fromTop ? gTop : gBot;
+    var w = Math.max(2, step * 0.42);
+    var r = w / 2;
+    for (var px = 0; px <= W; px += step) {
+      var x = px / W;
+      var h = speech(x, t, seed) * amp * bandH;
+      if (h < 1.2) continue;
+      var y = fromTop ? 0 : H - h;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(px - w / 2, y, w, h, fromTop ? [0, 0, r, r] : [r, r, 0, 0]);
+      else ctx.rect(px - w / 2, y, w, h);
+      ctx.fill();
+    }
+  }
+
+  function render(t) {
+    var p = (t % CYCLE) / CYCLE;
+    // The agent's turn drifts a little earlier or later each round, so some
+    // rounds have a clean gap and some have the two of them overlapping.
+    var lean = 0.035 * Math.sin(t * 0.21);
+    // The agent's fade must COMPLETE before the cycle wraps (0.880 + 0.075
+    // fade = 0.955): ending it at 0.960 left it mid-fade at p=1, so it
+    // snapped from half-height to silence once every cycle.
+    var caller = FLOOR + (1 - FLOOR) * Math.max(0, turnWindow(p, 0.030, 0.430, 0.075));
+    var agent  = FLOOR + (1 - FLOOR) * Math.max(0, turnWindow(p, 0.480 + lean, 0.880, 0.075));
+
+    ctx.clearRect(0, 0, W, H);
+    band(t, caller * boost, 0.0, true);
+    band(t, agent  * boost, 4.7, false);
+  }
+
+  function frame(now) {
+    boost += (boostTarget - boost) * 0.07;     // eased, so the surge lands soft
+    render(now / 1000);
+    raf = requestAnimationFrame(frame);
+  }
+
+  function start() {
+    if (raf) return;
+    raf = requestAnimationFrame(frame);
+  }
+  function stop() {
+    if (!raf) return;
+    cancelAnimationFrame(raf);
+    raf = 0;
+  }
+
+  resize();
+  window.addEventListener("resize", function () {
+    resize();
+    if (!raf) render(0.6);                     // keep the still frame correct
+  });
+
+  if (still.matches) {
+    render(0.6);                               // one frozen, composed moment
+  } else {
+    start();
+    // A login page can sit open for hours; don't spin the fans in a
+    // background tab.
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stop(); else start();
+    });
+  }
+
+  // The line answers you: reaching for the button makes the conversation
+  // surge. The only motion on the page triggered by a person.
+  var btn = document.getElementById("gbtn");
+  ["pointerenter", "focus"].forEach(function (e) {
+    btn.addEventListener(e, function () { boostTarget = 1.42; });
+  });
+  ["pointerleave", "blur"].forEach(function (e) {
+    btn.addEventListener(e, function () { boostTarget = 1; });
+  });
+
+  /* ---- sign-in state ------------------------------------------------- */
+
+  var ERRORS = {
+    not_authorized: "This Google account isn't authorized for this dashboard. Ask your administrator to add your email.",
+    state: "Your sign-in session expired. Try again.",
+    exchange: "Google sign-in didn't complete. Try again.",
+    unverified: "This Google account's email address is unverified."
+  };
+  var err = new URLSearchParams(location.search).get("error");
+  if (err) {
+    var box = document.getElementById("error");
+    box.textContent = ERRORS[err] || "Sign-in didn't complete. Try again.";
+    box.className = "on";
+  }
+
+  // Already signed in (or single-tenant mode)? Go straight to the dashboard.
+  fetch("/api/auth/me")
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (me) { if (me && !me.login_required) location.replace("/"); })
+    .catch(function () {});
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+# ---------------------------------------------------------------------------
+# LesCall secret files — TEMPLATE ONLY. This file is committed; the real ones
+# are NOT and must never live under /home/angelo/lescall.
+#
+# Why they live in /etc/lescall (P-1, plan §8.2 item 3):
+#   Every app container bind-mounts the whole repo at /home/angelo/lescall as
+#   uid 1000, which owns deploy/.pg_env. So ANY secret placed under the repo is
+#   readable by the api container *and* the runtime container *and* the workers
+#   container, no matter which service's `env_file:` names it. Payment keys and
+#   the admin token must not be readable by the process that runs live calls.
+#
+#   /etc/lescall/*.env is root-owned 0600, referenced by `env_file:`, and
+#   mounted into nothing.
+#
+# Create them:
+#   sudo install -d -m 0750 -o root -g root /etc/lescall
+#   sudo install -m 0600 /dev/null /etc/lescall/billing.env
+#   sudo install -m 0600 /dev/null /etc/lescall/admin.env
+#   sudo install -m 0600 /dev/null /etc/lescall/telephony.env
+#   # then paste the corresponding block below into each and fill it in
+#
+# After ANY edit:  sudo docker compose -f deploy/docker-compose.services.yml up -d
+#   `restart` does NOT re-read env_file. This has bitten this project before
+#   (RUNBOOK §11) — use `up -d`.
+#
+#   SUDO IS REQUIRED. `env_file:` is read by the compose CLI as the INVOKING
+#   USER — not by the daemon as root. Without sudo, compose dies with
+#   `open /etc/lescall/telephony.env: permission denied` and nothing restarts.
+#   Do not relax the 0600 mode to work around this: uid 1000 readability is
+#   exactly what /etc/lescall exists to prevent (RUNBOOK §23).
+#
+#   NEVER add `--remove-orphans`. lescall-pg belongs to
+#   docker-compose.postgres.yml and compose reports it as an orphan of this
+#   project — the flag would delete the database container.
+# ---------------------------------------------------------------------------
+
+
+# ===========================================================================
+# /etc/lescall/telephony.env      (api + runtime + workers)
+# ===========================================================================
+# The FreeSWITCH event-socket password. MUST match the `password` param in
+# /etc/freeswitch/autoload_configs/event_socket.conf.xml — see
+# deploy/freeswitch-event_socket.conf.xml and RUNBOOK §23.
+#   openssl rand -hex 32
+FS_ESL_PASSWORD=
+
+# Media-plane bind addresses. Loopback is the default in code; these exist so
+# the bind is explicit and auditable in one place rather than implied.
+LESCALL_WS_HOST=127.0.0.1
+LESCALL_SOCKET_HOST=127.0.0.1
+
+# Refuse to serve traffic if the OAuth login wall is not configured.
+LESCALL_REQUIRE_AUTH=true
+
+
+# ===========================================================================
+# /etc/lescall/billing.env        (api + workers ONLY — never runtime)
+# ===========================================================================
+# Razorpay. Leave EVERYTHING blank until the account exists: the billing layer
+# detects an unconfigured gateway and degrades honestly (checkout returns 503
+# "payments not configured", the webhook 503s, enforcement and receipts still
+# work). It never fabricates a payment.
+RAZORPAY_MODE=test                 # test | live
+RAZORPAY_KEY_ID=                   # public-ish: ships to the browser checkout
+RAZORPAY_KEY_SECRET=               # SECRET: signs orders/subscriptions
+RAZORPAY_WEBHOOK_SECRET=           # SECRET: different from KEY_SECRET, and
+                                   # different again between test and live
+
+# Rotation window: set the OLD secret here for the few minutes between
+# changing it in the Razorpay dashboard and every in-flight retry draining.
+# Signature verification accepts either while this is set. Clear it after.
+RAZORPAY_WEBHOOK_SECRET_PREVIOUS=
+
+# Dunning: how long a failed-payment tenant keeps their plan before dropping.
+BILLING_GRACE_HOURS=72
+
+# GST tax-invoice identity (ours, the supplier). Required before receipts can
+# be issued; receipts.py refuses to number an invoice without a valid GSTIN.
+PLATFORM_GSTIN=
+PLATFORM_LEGAL_NAME=
+PLATFORM_ADDRESS=
+PLATFORM_STATE_CODE=               # 2-digit GST state code, e.g. 24 = Gujarat
+
+
+# ===========================================================================
+# /etc/lescall/admin.env          (admin container ONLY)
+# ===========================================================================
+# Super-admin plane bearer token. The admin app REFUSES TO START if this is
+# missing or shorter than 32 characters — there is deliberately no
+# "unset means open" path.
+#   openssl rand -hex 32
+ADMIN_TOKEN=
+
+# Optional loopback TCP bind in addition to the UNIX socket, for convenience
+# when tunnelling. Off by default; the socket is the primary interface because
+# an HTTP-URL SSRF cannot address a UNIX socket at all.
+ADMIN_TCP_ENABLED=false
+ADMIN_TCP_PORT=8090

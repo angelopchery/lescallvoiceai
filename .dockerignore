@@ -1,0 +1,7 @@
+# Keep the image build context tiny: only requirements are COPYed
+# (deploy/Dockerfile.app); code + state are bind-mounted at runtime.
+*
+!calling-agent/requirements.txt
+!frontend
+frontend/node_modules
+frontend/dist

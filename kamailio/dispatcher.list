@@ -1,0 +1,4 @@
+# Kamailio dispatcher backend sets. Install at /etc/kamailio/dispatcher.list.
+# setid 1 = FreeSWITCH nodes (external sofia profile on private :5080).
+# After editing: kamcmd dispatcher.reload
+1 sip:10.160.0.8:5080

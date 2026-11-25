@@ -1,0 +1,178 @@
+# The plan §8 reference flow — the 7-step outbound example in AgentSpec v2.
+# Used by test_stage_machine_v2.py to prove the schema expresses the flow and
+# the engine executes it.
+agent_id: seven-step-fixture-v1
+version: 1.0.0
+call_direction: outbound
+identity:
+  agent_name: Asha
+  company_name: Demo Realty
+  company_tagline: Homes across South Gujarat
+  role_description: outbound property consultant
+  contact: "+91 99999 00000"
+  pronouns: she
+personality:
+  pronouns: she
+  energy: medium
+  tone: conversational
+  style: natural
+  ai_disclosure: deflect
+languages:
+  supported: [hi, en, gu]
+  default: hi
+  tts_voices:
+    hi: {model: bulbul:v3, speaker: simran, pace: 1.1}
+    en: {model: bulbul:v3, speaker: simran, pace: 1.1}
+    gu: {model: bulbul:v3, speaker: simran, pace: 1.1}
+  register_notes: {}
+call_flow:
+  call_goal: Qualify the contact and book a confirmed site visit; on rejection, capture WhatsApp follow-up.
+  scheduling: {offer_count: 2, style: exact_n}
+  callback_policy: {enabled: true, capture_slot: callback_time, counts_as_decline: false,
+                    responses: {en: "No problem — we'll call you back then. Thank you!"}}
+  completed_when: {required_slots: [phone], require_appointment: false}
+  decline_threshold: 2
+  stages:
+    - id: OPENING
+      order: 0
+      role: confirm_person
+      goal: "Confirm you reached {contact_name}; ask if it is a good time."
+      turns_until_advance: 99
+      advance_when: {intent: affirmation, min_turns: 1}
+    - id: DISCOVER_LOCATION
+      order: 1
+      role: discovery
+      collect: [location]
+      goal: Ask their preferred location. ONE question.
+      turns_until_advance: 99
+      advance_when: {all_collect_filled: true}
+    - id: DISCOVER_CONFIG
+      order: 2
+      role: discovery
+      collect: [bhk]
+      goal: Ask the configuration they need (1/2/3/4 BHK).
+      turns_until_advance: 99
+      advance_when: {all_collect_filled: true}
+    - id: DISCOVER_BUDGET
+      order: 3
+      role: discovery
+      collect: [budget]
+      goal: Ask their comfortable budget, softly.
+      turns_until_advance: 99
+      advance_when: {all_collect_filled: true}
+    - id: RECOMMEND
+      order: 4
+      role: recommend
+      goal: Recommend exactly ONE property matching stored location+config+budget (MATCH RULES). Two personal reasons.
+      turns_until_advance: 99
+      branches:
+        - {when_intent: question,    goto: ALTERNATIVES,     max_takes: 2}
+        - {when_intent: negation,    goto: HANDLE_REJECTION, max_takes: 1}
+        - {when_intent: affirmation, goto: NEXT_STEP,        max_takes: 1}
+    - id: ALTERNATIVES
+      order: 5
+      role: pitch
+      goal: Offer ONE different matching property.
+      turns_until_advance: 99
+      branches:
+        - {when_intent: affirmation, goto: NEXT_STEP}
+        - {when_intent: negation, goto: HANDLE_REJECTION}
+    - id: HANDLE_REJECTION
+      order: 6
+      role: pitch
+      goal: Acknowledge warmly; one trust proof; offer WhatsApp details for later.
+      turns_until_advance: 99
+      branches:
+        - {when_intent: affirmation, goto: NEXT_STEP,
+           actions: [capture_phone, promise_whatsapp_media]}
+        - {when_intent: negation, goto: CLOSING}
+    - id: NEXT_STEP
+      order: 7
+      role: scheduling
+      goal: Capture + read back phone; promise WhatsApp media; offer exactly TWO visit slots.
+      turns_until_advance: 99
+      advance_when: {slots: [phone]}
+      branches:
+        - {when_intent: affirmation, goto: CLOSING, actions: [book_visit]}
+    - id: CLOSING
+      order: 8
+      role: closing
+      goal: Warm close by name; restate what happens next.
+      turns_until_advance: 99
+outbound:
+  identity_confirm_line: {hi: "नमस्ते, क्या मेरी बात {contact_name} जी से हो रही है?"}
+  good_time_check_line: {hi: "क्या अभी दो मिनट बात करना ठीक रहेगा?"}
+  wrong_person_response: {hi: "माफ़ कीजिए! क्या {contact_name} जी से बात हो सकती है?"}
+  wrong_number_close: {hi: "माफ़ कीजिए, लगता है गलत नंबर लग गया। आपका दिन शुभ रहे!"}
+  wrong_number_patterns: [wrong number, galat number]
+slots:
+  - {name: location, type: enum, enum_values: [Surat, Vapi, Silvassa], required: true,
+     priority: 20, question: {en: "Which location do you prefer?"}}
+  - {name: bhk, type: enum, enum_values: [1BHK, 2BHK, 3BHK, 4BHK],
+     enum_synonyms: {"2BHK": ["2 bhk", "two bhk"], "3BHK": ["3 bhk", "three bhk"]},
+     required: true, priority: 30, depends_on: [location],
+     question: {en: "What configuration do you need?"}}
+  - {name: budget, type: money, required: true, priority: 40, depends_on: [location, bhk],
+     merge_policy: correction_gated, max_asks: 2,
+     question: {en: "What budget are you comfortable with?"}}
+  - {name: phone, type: phone, required: false, priority: 90,
+     confirm_readback: digit_groups_2, merge_policy: confirm,
+     question: {en: "What's the best number to send details to?"}}
+  - {name: callback_time, required: false, priority: 95,
+     question: {en: "When should we call you back?"}}
+follow_up:
+  whatsapp_promise: {enabled: true, assets: [photos, videos],
+                     promise_line: {hi: "मैं आपको WhatsApp पर photos और videos भेज दूँगा।"}}
+guardrails:
+  use_builtin_rules: true
+  compliance: {dnd_phrases: [stop calling, remove my number]}
+knowledge_base:
+  known_projects: {}
+  locations: [Surat, Vapi, Silvassa]
+  portfolio_prompt_text: Demo Realty portfolio placeholder text for the fixture agent.
+  catalog:
+    - {id: sahaj, name: Sahaj, location: Vapi, configurations: [1BHK, 2BHK],
+       price_range: "₹22-29L", availability: completed, positioning_tag: value,
+       aliases: [sahaj]}
+    - {id: aura, name: Aura, location: Surat, configurations: [2BHK, 3BHK],
+       price_range: "₹45-70L", availability: ongoing, positioning_tag: premium,
+       aliases: [aura]}
+  match_rules:
+    - {when: {budget: "<=40L", location: Vapi}, recommend: [sahaj],
+       reason: fits a value budget in Vapi}
+response_bank:
+  opening_greeting: "नमस्ते, क्या मेरी बात {contact_name} जी से हो रही है?"
+  identity_responses: {en: "This is Asha from Demo Realty."}
+  objection_responses: {en: ["I completely understand — may I share one quick point?"]}
+  decline_farewell: {en: "No problem at all — thank you for your time!"}
+  lang_switch_responses: {en: "Sure, let's continue in English."}
+  lang_fallbacks: {en: "Sorry, could you repeat that?"}
+  timeout_fallbacks: {en: "Let me get back to you on that."}
+  response_fallback: "Sorry, could you repeat that?"
+  graceful_close: {en: "Thank you so much for your time!"}
+  objection_playbook:
+    - {id: price, patterns: [too expensive, price too high],
+       answer: {en: "I hear you — {trust_proofs}. May I suggest a value option?"},
+       prompt_guidance: "'Price too high' → acknowledge, cite {trust_proofs}, offer the value option."}
+brand:
+  trust_proofs: ["30 years in business", "zero stalled projects"]
+calendar:
+  type: mock
+  mock_slots:
+    - {day: Tomorrow, time: "11:00 AM"}
+    - {day: Tomorrow, time: "4:00 PM"}
+  slots_text: {}
+llm_config:
+  model: gpt-4o-mini
+  max_tokens: 160
+  timeout_s: 5.0
+  stream_timeout_s: 7.0
+  filler_timeout_s: 1.0
+  intent_classify_timeout_s: 1.0
+  max_response_length: 400
+post_call:
+  outcomes:
+    - {id: booked, label: Visit booked, kind: success}
+    - {id: whatsapp_followup, label: WhatsApp follow-up, kind: progress}
+    - {id: callback_requested, label: Callback requested, kind: progress}
+    - {id: not_interested, label: Not interested, kind: failure}

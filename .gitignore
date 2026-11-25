@@ -1,0 +1,94 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+.pytest_cache/
+
+# Logs / runtime artifacts
+*.log
+*.log.[0-9]*
+logs/
+*.pid
+
+# Dependencies (restore with npm install)
+node_modules/
+
+# Runtime data
+build/
+credit_log/
+
+# Audio
+recordings/
+# Local staging copies of generated .xlsx exports; the durable copy is in GCS
+# (shared/export_store.py) and the DB row records where it lives.
+exports/
+*.wav
+*.mp3
+# …except the pre-generated TTS voice previews (product assets — each
+# regeneration costs real Sarvam credits; deploy/generate_voice_samples.py)
+!data/voice_samples/*.wav
+
+# Environment
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+#runtimelogs
+phase14_runtime/live_calls_state.json
+
+# Agent runtime state (active-agent selection + build cache)
+calling-agent/agents/active_agent.json
+calling-agent/backend/logs/
+frontend/tsconfig.tsbuildinfo
+
+# Copilot chat session persistence + tenant document uploads (user data)
+dashboard/copilot_sessions/
+dashboard/copilot_uploads/
+
+# Runtime dial-linkage fallback store (DB is primary; this is live state)
+dashboard/call_link.json
+
+# TTS PCM greeting cache + cleanup staging (runtime artifacts)
+data/tts_cache/
+data/cleanup/
+
+dashboard/sarvam_key_status.json
+
+# Multi-tenant DB + secrets (never commit)
+shared/db/lescall.db
+shared/db/lescall.db-wal
+shared/db/lescall.db-shm
+dashboard/.session_secret
+data/kamailio_reload
+deploy/.pg_env
+
+# Sarvam key pool (live API keys — platform infra, never in git)
+dashboard/api_key_pool.json
+dashboard/api_key_state.json
+dashboard/sarvam_dead_keys.json
+dashboard/sarvam_key_master.json
+
+# Sentinel runtime state (watchdog cooldowns + status snapshot)
+data/sentinel_state.json
+data/sentinel_status.json
+core
+agent.yaml
+calling-agent/agents/**/agent.yaml
+
+# Agent LLM context-cache registry (runtime state, RUNBOOK §62)
+data/llm_context_cache.json
+data/llm_context_cache.tmp
+
+# Third-party tool checkout + its generated output (regenerable; 21 MB+ of cache)
+graphify/
+graphify-out/
+
+# WhatsApp media uploaded by tenants (customer files, 244 MB; backed up encrypted)
+data/whatsapp/media/

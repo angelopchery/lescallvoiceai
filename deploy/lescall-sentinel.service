@@ -1,0 +1,24 @@
+# LesCall Sentinel — 24/7 self-healing watchdog (shared/sentinel.py).
+# Runs on the HOST, outside the Docker stack it supervises, so it can repair
+# containers, FreeSWITCH, and nginx. Install:
+#   sudo cp deploy/lescall-sentinel.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now lescall-sentinel
+[Unit]
+Description=LesCall Sentinel (24/7 platform watchdog + self-healing)
+After=network-online.target docker.service
+Wants=docker.service
+
+[Service]
+Type=simple
+User=angelo
+SupplementaryGroups=freeswitch
+WorkingDirectory=/home/angelo/lescall
+EnvironmentFile=/home/angelo/lescall/deploy/.pg_env
+ExecStart=/home/angelo/lescall/calling-agent/venv/bin/python -m shared.sentinel --interval 30
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/angelo/lescall/phase14_runtime/logs/sentinel.log
+StandardError=append:/home/angelo/lescall/phase14_runtime/logs/sentinel.log
+
+[Install]
+WantedBy=multi-user.target

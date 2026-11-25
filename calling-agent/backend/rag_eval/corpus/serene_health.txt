@@ -1,0 +1,15 @@
+Serene Health Clinics — SPECIALIST DIRECTORY
+
+DELHI BRANCH: General Medicine (all common illnesses, health checkups), Cardiology & Heart Care — Dr. Anil Mehra (chest pain, palpitations, ECG, echo), Gynecology & Women's Health — Dr. Pooja Shah (routine checkups, PCOD, pregnancy care), Neurology (headaches, nerve issues).
+
+NOIDA BRANCH: General Medicine, Orthopedics & Joint Care — Dr. Rajesh Verma (knee/back/joint pain, fractures, physio), Diabetes & Endocrinology (sugar control, thyroid, hormones).
+
+GURGAON BRANCH: General Medicine, Dermatology & Skin Care — Dr. Sunita Kapoor (acne, eczema, skin infections, hair fall).
+
+ALL BRANCHES: Pediatrics & Child Care (children's health, vaccinations, growth monitoring).
+
+MATCHING GUIDE:
+Chest pain / breathlessness → Cardiology (Delhi) | Joint/back pain → Orthopedics (Noida)
+Skin issues / hair fall → Dermatology (Gurgaon) | Women's health → Gynecology (Delhi)
+Child health → Pediatrics (any branch) | Sugar / thyroid → Diabetes Care (Noida)
+General checkup → General Medicine (any branch)

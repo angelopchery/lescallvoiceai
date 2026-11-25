@@ -1,0 +1,14 @@
+# Boot self-heal for the Kamailio carrier ACL (plan §4c).
+# Install: cp to /etc/systemd/system/ && systemctl enable lescall-kamailio-acl-seed.service
+[Unit]
+Description=Seed LesCall Kamailio carrier ACL from trunks table
+After=kamailio.service
+Wants=kamailio.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/angelo/lescall/deploy/lescall-kamailio-acl-seed.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

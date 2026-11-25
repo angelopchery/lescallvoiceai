@@ -1,0 +1,8 @@
+Dhron Eye — KNOWLEDGE BASE
+
+Dhron Eye helps businesses turn existing CCTV cameras into real-time insights, alerts, and actions. It offers features like real-time monitoring, smart alerts, and actionable insights to improve decision-making. Dhron Eye analyzes events, detects issues automatically, and generates meaningful data to enhance operations. The system integrates seamlessly with existing CCTV infrastructure and various ERP and CRM systems, ensuring a secure and reliable experience. Users can chat with Dhron Eye on WhatsApp for instant answers and insights, making it easy to monitor and manage operations effectively.
+
+CATALOGUE
+id: real_time_monitoring  name: Real-Time Monitoring  pitch_points: ['Continuous 24/7 monitoring', 'Instant alerts for immediate action']  aliases: ['Real-time alerts', '24/7 monitoring']  price_range: Contact for pricing  availability: Available now
+id: smart_alerts  name: Smart Alerts  pitch_points: ['Proactive alerts to prevent issues', 'Automated incident reporting']  aliases: ['Instant alerts', 'Proactive notifications']  price_range: Contact for pricing  availability: Available now
+id: actionable_insights  name: Actionable Insights  pitch_points: ['Data-driven decision making', 'Improved operational efficiency']  aliases: ['Data insights', 'Operational analytics']  price_range: Contact for pricing  availability: Available now

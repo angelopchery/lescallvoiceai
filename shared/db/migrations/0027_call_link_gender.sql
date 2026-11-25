@@ -1,0 +1,26 @@
+-- 0027 — carry the contact's gender onto the dial record.
+--
+-- `contacts.gender` has existed since the phone book did: a CSV upload with a
+-- "Gender" (or "Sex") column is mapped to it, the public API accepts it, and
+-- the Contacts sheet of every export prints it. It was write-only. Nothing
+-- downstream ever read it, so the one place it obviously belongs — how the
+-- agent ADDRESSES the person it is calling — could not use it.
+--
+-- Why a column here and not a join at call time
+-- ---------------------------------------------
+-- `call_links` is already the dial-time SNAPSHOT the telephony bridge reads:
+-- it carries `name` for exactly this reason, even though `contact_id` is right
+-- there beside it. The bridge's routing bundle is on the critical path to the
+-- greeting (it runs in a worker thread precisely because ~250ms of serial DB
+-- round-trips used to sit on the event loop), and adding a join to resolve an
+-- honorific would put another one back. Gender is snapshot alongside the name
+-- it will be spoken next to, from the same row, in the same read.
+--
+-- Nullable and unbackfilled on purpose
+-- ------------------------------------
+-- Most contacts have no gender and never will — it is an optional column in an
+-- optional upload. Empty is the norm, not a gap to be filled, and every reader
+-- must already treat it as "no honorific" rather than guess one. Historical
+-- dial records stay NULL: inferring gender for calls already placed would be
+-- inventing data about real people to decorate a log.
+ALTER TABLE call_links ADD COLUMN IF NOT EXISTS gender TEXT;

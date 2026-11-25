@@ -1,0 +1,33 @@
+# LesCall main database. Start: docker compose -f deploy/docker-compose.postgres.yml up -d
+# Credentials live in deploy/.pg_env (git-ignored); the same file is the systemd
+# EnvironmentFile that hands LESCALL_DB_URL to lescall-dashboard/lescall-runtime.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lescall-pg
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5432:5432"
+    env_file:
+      - .pg_env
+    environment:
+      POSTGRES_DB: lescall
+      POSTGRES_USER: lescall
+    volumes:
+      - lescall_pgdata:/var/lib/postgresql/data
+    # Tuned for the 2-core / 3.8GB VM shared with FreeSWITCH + AI pipeline.
+    command: >-
+      postgres
+      -c shared_buffers=128MB
+      -c effective_cache_size=512MB
+      -c max_connections=30
+      -c work_mem=4MB
+      -c maintenance_work_mem=32MB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lescall -d lescall"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  lescall_pgdata:

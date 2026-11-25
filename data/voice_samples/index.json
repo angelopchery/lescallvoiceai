@@ -1,0 +1,34 @@
+[
+  {
+    "speaker": "shubh",
+    "gender": "male"
+  },
+  {
+    "speaker": "aditya",
+    "gender": "male"
+  },
+  {
+    "speaker": "amit",
+    "gender": "male"
+  },
+  {
+    "speaker": "kabir",
+    "gender": "male"
+  },
+  {
+    "speaker": "simran",
+    "gender": "female"
+  },
+  {
+    "speaker": "priya",
+    "gender": "female"
+  },
+  {
+    "speaker": "neha",
+    "gender": "female"
+  },
+  {
+    "speaker": "shruti",
+    "gender": "female"
+  }
+]

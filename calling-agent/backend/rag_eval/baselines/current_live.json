@@ -1,0 +1,2003 @@
+{
+  "generated_at": "2026-08-12T17:13:22",
+  "label": "current (hardened, live)",
+  "config": {
+    "retriever": "current",
+    "mode": "live",
+    "latency_is_real": true,
+    "embed_model": "text-embedding-3-small",
+    "chunk_words": "default",
+    "documents": 10,
+    "chunks": 17,
+    "dataset": "docs_rag.jsonl",
+    "overrides": {},
+    "generation": false,
+    "judge": false,
+    "embedding_api_calls": 45
+  },
+  "summary": {
+    "questions": 37,
+    "answerable": 28,
+    "must_abstain": 9,
+    "retrieval": {
+      "recall@1": 0.7857,
+      "recall@3": 0.9821,
+      "recall@5": 0.9821,
+      "recall@10": 0.9821,
+      "recall@candidates": 1.0,
+      "precision@3": 0.5238,
+      "precision@5": 0.5238,
+      "mrr": 0.8929,
+      "ndcg@5": 0.9016
+    },
+    "abstention": {
+      "correct_abstention_rate": 0.2222,
+      "over_abstention_rate": 0.0
+    },
+    "latency_ms": {
+      "p50": 256.25,
+      "p90": 293.59,
+      "p95": 347.81,
+      "p99": 366.77,
+      "mean": 246.88,
+      "stages_p95": {
+        "cache_lookup": 0.17,
+        "embed": 345.48,
+        "index": 0.85,
+        "rerank": 0.03,
+        "search": 0.29,
+        "total": 347.37
+      }
+    },
+    "cost": {
+      "embed_tokens_per_query": 12.7568,
+      "embed_cost_inr_per_query": 2.38246e-05,
+      "cache_hit_rate": 0.0
+    },
+    "citations": {
+      "accuracy": 1.0,
+      "avg_per_answer": 2.6857
+    },
+    "by_category": {
+      "ambiguous": {
+        "n": 1,
+        "recall@5": null,
+        "mrr": null
+      },
+      "contextual": {
+        "n": 3,
+        "recall@5": 1.0,
+        "mrr": 1.0
+      },
+      "direct_factual": {
+        "n": 14,
+        "recall@5": 1.0,
+        "mrr": 0.964
+      },
+      "edge_case": {
+        "n": 5,
+        "recall@5": 1.0,
+        "mrr": 0.556
+      },
+      "long_context": {
+        "n": 1,
+        "recall@5": 1.0,
+        "mrr": 0.333
+      },
+      "multi_hop": {
+        "n": 5,
+        "recall@5": 0.9,
+        "mrr": 0.9
+      },
+      "no_answer": {
+        "n": 6,
+        "recall@5": null,
+        "mrr": null
+      },
+      "wrong_context": {
+        "n": 2,
+        "recall@5": 1.0,
+        "mrr": 1.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "rag_eval_001",
+      "category": "direct_factual",
+      "difficulty": "easy",
+      "answerable": true,
+      "question": "What does DhronAI actually do?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 263.09,
+      "stage_ms": {
+        "index": 7.97,
+        "cache_lookup": 0.04,
+        "embed": 253.17,
+        "search": 0.29,
+        "rerank": 0.03,
+        "total": 262.59
+      },
+      "embed_tokens": 8,
+      "embed_cost_inr": 1.413e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 0,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0317
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_002",
+      "category": "direct_factual",
+      "difficulty": "easy",
+      "answerable": true,
+      "question": "Does your system run on our own servers or on your cloud?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.032,
+      "total_ms": 293.59,
+      "stage_ms": {
+        "index": 0.57,
+        "cache_lookup": 0.07,
+        "embed": 291.14,
+        "search": 0.18,
+        "rerank": 0.02,
+        "total": 293.02
+      },
+      "embed_tokens": 13,
+      "embed_cost_inr": 2.297e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 0,
+          "score": 0.032
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0318
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0308
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_003",
+      "category": "direct_factual",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "What are the six stages of your implementation approach?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 263.59,
+      "stage_ms": {
+        "index": 0.58,
+        "cache_lookup": 0.07,
+        "embed": 261.01,
+        "search": 0.18,
+        "rerank": 0.03,
+        "total": 263.11
+      },
+      "embed_tokens": 10,
+      "embed_cost_inr": 1.767e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.032
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 0,
+          "score": 0.0318
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.6666666666666666,
+      "precision@5": 0.6666666666666666,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_004",
+      "category": "direct_factual",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "What are the three layers of AI-Inicio?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 231.25,
+      "stage_ms": {
+        "index": 0.59,
+        "cache_lookup": 0.08,
+        "embed": 228.66,
+        "search": 0.18,
+        "rerank": 0.02,
+        "total": 230.75
+      },
+      "embed_tokens": 10,
+      "embed_cost_inr": 1.767e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0315
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_005",
+      "category": "direct_factual",
+      "difficulty": "easy",
+      "answerable": true,
+      "question": "What does MyReconcilePro do?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 1,
+      "top_score": 0.0328,
+      "total_ms": 260.03,
+      "stage_ms": {
+        "index": 0.57,
+        "cache_lookup": 0.07,
+        "embed": 257.98,
+        "search": 0.2,
+        "rerank": 0.02,
+        "total": 259.57
+      },
+      "embed_tokens": 9,
+      "embed_cost_inr": 1.59e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.0328
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 1.0,
+      "precision@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 1
+    },
+    {
+      "id": "rag_eval_006",
+      "category": "multi_hop",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "We have hundreds of CCTV cameras in our factory. Do you have anything for that?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 2,
+      "top_score": 0.0328,
+      "total_ms": 261.35,
+      "stage_ms": {
+        "index": 0.84,
+        "cache_lookup": 0.11,
+        "embed": 258.79,
+        "search": 0.15,
+        "rerank": 0.02,
+        "total": 260.84
+      },
+      "embed_tokens": 17,
+      "embed_cost_inr": 3.003e-05,
+      "retrieved": [
+        {
+          "doc": "dhron_eye",
+          "chunk": 0,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.0323
+        }
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 1.0,
+      "precision@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 0.7967075809905066,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 2
+    },
+    {
+      "id": "rag_eval_007",
+      "category": "direct_factual",
+      "difficulty": "easy",
+      "answerable": true,
+      "question": "Which of your products is the voice calling platform?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0325,
+      "total_ms": 259.65,
+      "stage_ms": {
+        "index": 0.63,
+        "cache_lookup": 0.07,
+        "embed": 257.31,
+        "search": 0.18,
+        "rerank": 0.02,
+        "total": 259.22
+      },
+      "embed_tokens": 10,
+      "embed_cost_inr": 1.767e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.0325
+        },
+        {
+          "doc": "dhron_ai_angelobot",
+          "chunk": 0,
+          "score": 0.0325
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0317
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_008",
+      "category": "direct_factual",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "Who is DhronERP built for?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0318,
+      "total_ms": 366.77,
+      "stage_ms": {
+        "index": 0.55,
+        "cache_lookup": 0.08,
+        "embed": 364.42,
+        "search": 0.16,
+        "rerank": 0.02,
+        "total": 366.33
+      },
+      "embed_tokens": 8,
+      "embed_cost_inr": 1.413e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.0318
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0318
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0317
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_009",
+      "category": "edge_case",
+      "difficulty": "hard",
+      "answerable": true,
+      "question": "What are the four stages of a customer deployment?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 248.2,
+      "stage_ms": {
+        "index": 0.64,
+        "cache_lookup": 0.08,
+        "embed": 245.18,
+        "search": 0.2,
+        "rerank": 0.02,
+        "total": 247.2
+      },
+      "embed_tokens": 10,
+      "embed_cost_inr": 1.767e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.032
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 0,
+          "score": 0.0315
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_010",
+      "category": "direct_factual",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "What is the goal of the sales call?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0325,
+      "total_ms": 250.74,
+      "stage_ms": {
+        "index": 0.59,
+        "cache_lookup": 0.08,
+        "embed": 248.2,
+        "search": 0.17,
+        "rerank": 0.02,
+        "total": 250.08
+      },
+      "embed_tokens": 9,
+      "embed_cost_inr": 1.59e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0325
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.0312
+        }
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 0.5,
+      "ndcg@5": 0.6309297535714574,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_011",
+      "category": "multi_hop",
+      "difficulty": "hard",
+      "answerable": true,
+      "question": "We are a bank and we are not allowed to send customer data to any outside AI provider. Is there anything you can do for us?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 261.76,
+      "stage_ms": {
+        "index": 0.64,
+        "cache_lookup": 0.11,
+        "embed": 258.37,
+        "search": 0.29,
+        "rerank": 0.03,
+        "total": 260.93
+      },
+      "embed_tokens": 28,
+      "embed_cost_inr": 4.946e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 0,
+          "score": 0.0315
+        }
+      ],
+      "recall@1": 0.0,
+      "recall@3": 0.5,
+      "recall@5": 0.5,
+      "recall@10": 0.5,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 0.5,
+      "ndcg@5": 0.52129602861432,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_012",
+      "category": "direct_factual",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "We already have an ERP, so why would we need you?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 222.09,
+      "stage_ms": {
+        "index": 0.64,
+        "cache_lookup": 0.09,
+        "embed": 219.71,
+        "search": 0.16,
+        "rerank": 0.02,
+        "total": 221.65
+      },
+      "embed_tokens": 13,
+      "embed_cost_inr": 2.297e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.0315
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.6666666666666666,
+      "precision@5": 0.6666666666666666,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_013",
+      "category": "contextual",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "This sounds like a huge implementation project. How long before we see anything?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 229.55,
+      "stage_ms": {
+        "index": 0.62,
+        "cache_lookup": 0.09,
+        "embed": 227.0,
+        "search": 0.18,
+        "rerank": 0.02,
+        "total": 228.95
+      },
+      "embed_tokens": 15,
+      "embed_cost_inr": 2.65e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.031
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0161
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_014",
+      "category": "direct_factual",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "What questions should I be asking on a discovery call?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 257.32,
+      "stage_ms": {
+        "index": 0.57,
+        "cache_lookup": 0.09,
+        "embed": 255.02,
+        "search": 0.16,
+        "rerank": 0.02,
+        "total": 256.92
+      },
+      "embed_tokens": 11,
+      "embed_cost_inr": 1.943e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.0159
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_015",
+      "category": "contextual",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "What makes you different from the AI tools we already use?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 243.61,
+      "stage_ms": {
+        "index": 0.62,
+        "cache_lookup": 0.13,
+        "embed": 240.65,
+        "search": 0.29,
+        "rerank": 0.03,
+        "total": 243.03
+      },
+      "embed_tokens": 12,
+      "embed_cost_inr": 2.12e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0315
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.6666666666666666,
+      "precision@5": 0.6666666666666666,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_016",
+      "category": "direct_factual",
+      "difficulty": "easy",
+      "answerable": true,
+      "question": "Which industries do you work with?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 262.76,
+      "stage_ms": {
+        "index": 0.85,
+        "cache_lookup": 0.11,
+        "embed": 259.74,
+        "search": 0.16,
+        "rerank": 0.02,
+        "total": 262.19
+      },
+      "embed_tokens": 7,
+      "embed_cost_inr": 1.237e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 0,
+          "score": 0.0317
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.6666666666666666,
+      "precision@5": 0.6666666666666666,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_017",
+      "category": "edge_case",
+      "difficulty": "hard",
+      "answerable": true,
+      "question": "aapka system self-hosted hai ya cloud pe chalta hai?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.032,
+      "total_ms": 347.81,
+      "stage_ms": {
+        "index": 0.57,
+        "cache_lookup": 0.1,
+        "embed": 345.48,
+        "search": 0.18,
+        "rerank": 0.02,
+        "total": 347.37
+      },
+      "embed_tokens": 15,
+      "embed_cost_inr": 2.65e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.032
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.032
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 0,
+          "score": 0.032
+        }
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 0.3333333333333333,
+      "ndcg@5": 0.5,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_018",
+      "category": "edge_case",
+      "difficulty": "hard",
+      "answerable": true,
+      "question": "legacy software ko replace kar sakte ho kya?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0323,
+      "total_ms": 256.14,
+      "stage_ms": {
+        "index": 0.56,
+        "cache_lookup": 0.14,
+        "embed": 253.04,
+        "search": 0.23,
+        "rerank": 0.03,
+        "total": 255.59
+      },
+      "embed_tokens": 11,
+      "embed_cost_inr": 1.943e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 0,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0323
+        }
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 0.3333333333333333,
+      "ndcg@5": 0.5,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_019",
+      "category": "long_context",
+      "difficulty": "hard",
+      "answerable": true,
+      "question": "So we've been looking at a few vendors this quarter and honestly most of them just gave us another dashboard to log into, which is exactly what my ops head does not want — she keeps saying our people already have seven tabs open. Anyway, what I really want to understand before I take this to the board is what your competitive advantages actually are.",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0317,
+      "total_ms": 256.25,
+      "stage_ms": {
+        "index": 0.56,
+        "cache_lookup": 0.13,
+        "embed": 253.67,
+        "search": 0.26,
+        "rerank": 0.02,
+        "total": 255.82
+      },
+      "embed_tokens": 70,
+      "embed_cost_inr": 0.00012366,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0317
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0315
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0315
+        }
+      ],
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 0.3333333333333333,
+      "ndcg@5": 0.5,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_020",
+      "category": "wrong_context",
+      "difficulty": "hard",
+      "answerable": true,
+      "question": "What has the engineer at Dhron AI built so far?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 249.56,
+      "stage_ms": {
+        "index": 0.56,
+        "cache_lookup": 0.11,
+        "embed": 247.25,
+        "search": 0.19,
+        "rerank": 0.02,
+        "total": 249.15
+      },
+      "embed_tokens": 12,
+      "embed_cost_inr": 2.12e-05,
+      "retrieved": [
+        {
+          "doc": "dhron_ai_angelobot",
+          "chunk": 0,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.031
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_021",
+      "category": "wrong_context",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "Which Nintendo Switch has the seven inch OLED screen and what does it cost?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 259.39,
+      "stage_ms": {
+        "index": 0.64,
+        "cache_lookup": 0.13,
+        "embed": 257.0,
+        "search": 0.21,
+        "rerank": 0.02,
+        "total": 258.99
+      },
+      "embed_tokens": 15,
+      "embed_cost_inr": 2.65e-05,
+      "retrieved": [
+        {
+          "doc": "gamezone_india",
+          "chunk": 0,
+          "score": 0.0328
+        },
+        {
+          "doc": "gamezone_india",
+          "chunk": 1,
+          "score": 0.0323
+        },
+        {
+          "doc": "gamezone_india",
+          "chunk": 2,
+          "score": 0.0317
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_022",
+      "category": "multi_hop",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "My knee has been hurting for weeks — which doctor should I see and where?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 1,
+      "top_score": 0.0328,
+      "total_ms": 263.73,
+      "stage_ms": {
+        "index": 0.56,
+        "cache_lookup": 0.12,
+        "embed": 261.64,
+        "search": 0.17,
+        "rerank": 0.02,
+        "total": 263.17
+      },
+      "embed_tokens": 16,
+      "embed_cost_inr": 2.827e-05,
+      "retrieved": [
+        {
+          "doc": "serene_health",
+          "chunk": 0,
+          "score": 0.0328
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 1.0,
+      "precision@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 1
+    },
+    {
+      "id": "rag_eval_023",
+      "category": "direct_factual",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "Do you have a stretchable fabric for leggings and gym wear?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 1,
+      "top_score": 0.0328,
+      "total_ms": 241.76,
+      "stage_ms": {
+        "index": 0.54,
+        "cache_lookup": 0.12,
+        "embed": 239.79,
+        "search": 0.17,
+        "rerank": 0.02,
+        "total": 241.35
+      },
+      "embed_tokens": 13,
+      "embed_cost_inr": 2.297e-05,
+      "retrieved": [
+        {
+          "doc": "kaapadh_fabrics",
+          "chunk": 0,
+          "score": 0.0328
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 1.0,
+      "precision@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 1
+    },
+    {
+      "id": "rag_eval_024",
+      "category": "multi_hop",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "Looking for a 3BHK in Surat, budget around 1.1 crore. What do you have?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 244.87,
+      "stage_ms": {
+        "index": 0.56,
+        "cache_lookup": 0.13,
+        "embed": 242.28,
+        "search": 0.21,
+        "rerank": 0.02,
+        "total": 244.35
+      },
+      "embed_tokens": 24,
+      "embed_cost_inr": 4.24e-05,
+      "retrieved": [
+        {
+          "doc": "pramukh_group",
+          "chunk": 0,
+          "score": 0.0328
+        },
+        {
+          "doc": "horizon_homes",
+          "chunk": 0,
+          "score": 0.0323
+        },
+        {
+          "doc": "gamezone_india",
+          "chunk": 1,
+          "score": 0.0315
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_025",
+      "category": "direct_factual",
+      "difficulty": "easy",
+      "answerable": true,
+      "question": "What is term insurance exactly?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 1,
+      "top_score": 0.0328,
+      "total_ms": 245.35,
+      "stage_ms": {
+        "index": 0.56,
+        "cache_lookup": 0.14,
+        "embed": 243.31,
+        "search": 0.16,
+        "rerank": 0.04,
+        "total": 244.88
+      },
+      "embed_tokens": 6,
+      "embed_cost_inr": 1.06e-05,
+      "retrieved": [
+        {
+          "doc": "b2_market",
+          "chunk": 0,
+          "score": 0.0328
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 1.0,
+      "precision@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 1
+    },
+    {
+      "id": "rag_eval_026",
+      "category": "no_answer",
+      "difficulty": "hard",
+      "answerable": false,
+      "question": "How much does DhronEYE cost per camera?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0323,
+      "total_ms": 265.1,
+      "stage_ms": {
+        "index": 0.57,
+        "cache_lookup": 0.15,
+        "embed": 262.69,
+        "search": 0.16,
+        "rerank": 0.02,
+        "total": 264.66
+      },
+      "embed_tokens": 11,
+      "embed_cost_inr": 1.943e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0315
+        },
+        {
+          "doc": "dhron_eye",
+          "chunk": 0,
+          "score": 0.0164
+        }
+      ],
+      "recall@1": null,
+      "recall@3": null,
+      "recall@5": null,
+      "recall@10": null,
+      "recall@candidates": null,
+      "precision@3": null,
+      "precision@5": null,
+      "mrr": null,
+      "ndcg@5": null,
+      "abstention_correct": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_027",
+      "category": "no_answer",
+      "difficulty": "medium",
+      "answerable": false,
+      "question": "How many employees does DhronAI have?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 299.32,
+      "stage_ms": {
+        "index": 0.57,
+        "cache_lookup": 0.13,
+        "embed": 296.87,
+        "search": 0.16,
+        "rerank": 0.02,
+        "total": 298.86
+      },
+      "embed_tokens": 9,
+      "embed_cost_inr": 1.59e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 0,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0318
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0317
+        }
+      ],
+      "recall@1": null,
+      "recall@3": null,
+      "recall@5": null,
+      "recall@10": null,
+      "recall@candidates": null,
+      "precision@3": null,
+      "precision@5": null,
+      "mrr": null,
+      "ndcg@5": null,
+      "abstention_correct": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_028",
+      "category": "no_answer",
+      "difficulty": "hard",
+      "answerable": false,
+      "question": "Is DhronAI ISO 27001 certified?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 243.25,
+      "stage_ms": {
+        "index": 0.61,
+        "cache_lookup": 0.15,
+        "embed": 240.91,
+        "search": 0.15,
+        "rerank": 0.02,
+        "total": 242.78
+      },
+      "embed_tokens": 10,
+      "embed_cost_inr": 1.767e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 0,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.032
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.032
+        }
+      ],
+      "recall@1": null,
+      "recall@3": null,
+      "recall@5": null,
+      "recall@10": null,
+      "recall@candidates": null,
+      "precision@3": null,
+      "precision@5": null,
+      "mrr": null,
+      "ndcg@5": null,
+      "abstention_correct": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_029",
+      "category": "no_answer",
+      "difficulty": "medium",
+      "answerable": false,
+      "question": "Who founded DhronAI and when?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 251.81,
+      "stage_ms": {
+        "index": 0.55,
+        "cache_lookup": 0.14,
+        "embed": 249.5,
+        "search": 0.15,
+        "rerank": 0.02,
+        "total": 251.34
+      },
+      "embed_tokens": 8,
+      "embed_cost_inr": 1.413e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 0,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.032
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.032
+        }
+      ],
+      "recall@1": null,
+      "recall@3": null,
+      "recall@5": null,
+      "recall@10": null,
+      "recall@candidates": null,
+      "precision@3": null,
+      "precision@5": null,
+      "mrr": null,
+      "ndcg@5": null,
+      "abstention_correct": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_030",
+      "category": "no_answer",
+      "difficulty": "medium",
+      "answerable": false,
+      "question": "What is your refund policy if the deployment does not work out?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 1,
+      "top_score": 0.0313,
+      "total_ms": 244.24,
+      "stage_ms": {
+        "index": 0.7,
+        "cache_lookup": 0.15,
+        "embed": 242.01,
+        "search": 0.17,
+        "rerank": 0.02,
+        "total": 243.82
+      },
+      "embed_tokens": 13,
+      "embed_cost_inr": 2.297e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0313
+        }
+      ],
+      "recall@1": null,
+      "recall@3": null,
+      "recall@5": null,
+      "recall@10": null,
+      "recall@candidates": null,
+      "precision@3": null,
+      "precision@5": null,
+      "mrr": null,
+      "ndcg@5": null,
+      "abstention_correct": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 1
+    },
+    {
+      "id": "rag_eval_031",
+      "category": "multi_hop",
+      "difficulty": "hard",
+      "answerable": true,
+      "question": "Does GameZone offer EMI on the OLED console?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 263.05,
+      "stage_ms": {
+        "index": 0.55,
+        "cache_lookup": 0.14,
+        "embed": 260.46,
+        "search": 0.18,
+        "rerank": 0.02,
+        "total": 262.58
+      },
+      "embed_tokens": 11,
+      "embed_cost_inr": 1.943e-05,
+      "retrieved": [
+        {
+          "doc": "gamezone_india",
+          "chunk": 0,
+          "score": 0.0328
+        },
+        {
+          "doc": "gamezone_india",
+          "chunk": 2,
+          "score": 0.0323
+        },
+        {
+          "doc": "gamezone_india",
+          "chunk": 1,
+          "score": 0.0315
+        }
+      ],
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.6666666666666666,
+      "precision@5": 0.6666666666666666,
+      "mrr": 1.0,
+      "ndcg@5": 0.7967075809905066,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_037",
+      "category": "no_answer",
+      "difficulty": "hard",
+      "answerable": false,
+      "question": "What warranty do I get with the Switch OLED?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 216.0,
+      "stage_ms": {
+        "index": 0.63,
+        "cache_lookup": 0.15,
+        "embed": 213.49,
+        "search": 0.16,
+        "rerank": 0.02,
+        "total": 215.42
+      },
+      "embed_tokens": 10,
+      "embed_cost_inr": 1.767e-05,
+      "retrieved": [
+        {
+          "doc": "gamezone_india",
+          "chunk": 0,
+          "score": 0.0328
+        },
+        {
+          "doc": "gamezone_india",
+          "chunk": 1,
+          "score": 0.0323
+        },
+        {
+          "doc": "gamezone_india",
+          "chunk": 2,
+          "score": 0.0317
+        }
+      ],
+      "recall@1": null,
+      "recall@3": null,
+      "recall@5": null,
+      "recall@10": null,
+      "recall@candidates": null,
+      "precision@3": null,
+      "precision@5": null,
+      "mrr": null,
+      "ndcg@5": null,
+      "abstention_correct": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_032",
+      "category": "ambiguous",
+      "difficulty": "hard",
+      "answerable": false,
+      "question": "What's the price?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0323,
+      "total_ms": 253.16,
+      "stage_ms": {
+        "index": 0.55,
+        "cache_lookup": 0.16,
+        "embed": 250.74,
+        "search": 0.17,
+        "rerank": 0.02,
+        "total": 252.73
+      },
+      "embed_tokens": 5,
+      "embed_cost_inr": 8.83e-06,
+      "retrieved": [
+        {
+          "doc": "gamezone_india",
+          "chunk": 1,
+          "score": 0.0323
+        },
+        {
+          "doc": "gamezone_india",
+          "chunk": 0,
+          "score": 0.0315
+        },
+        {
+          "doc": "nike_india",
+          "chunk": 0,
+          "score": 0.0311
+        }
+      ],
+      "recall@1": null,
+      "recall@3": null,
+      "recall@5": null,
+      "recall@10": null,
+      "recall@candidates": null,
+      "precision@3": null,
+      "precision@5": null,
+      "mrr": null,
+      "ndcg@5": null,
+      "abstention_correct": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_033",
+      "category": "edge_case",
+      "difficulty": "easy",
+      "answerable": false,
+      "question": "hmm",
+      "abstained": true,
+      "abstain_reason": "not_a_question",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 0,
+      "n_hits": 0,
+      "top_score": null,
+      "total_ms": 0.4,
+      "stage_ms": {
+        "total": 0.04
+      },
+      "embed_tokens": 0,
+      "embed_cost_inr": null,
+      "retrieved": [],
+      "recall@1": null,
+      "recall@3": null,
+      "recall@5": null,
+      "recall@10": null,
+      "recall@candidates": null,
+      "precision@3": null,
+      "precision@5": null,
+      "mrr": null,
+      "ndcg@5": null,
+      "abstention_correct": true
+    },
+    {
+      "id": "rag_eval_034",
+      "category": "edge_case",
+      "difficulty": "easy",
+      "answerable": false,
+      "question": "ok",
+      "abstained": true,
+      "abstain_reason": "not_a_question",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 0,
+      "n_hits": 0,
+      "top_score": null,
+      "total_ms": 0.3,
+      "stage_ms": {
+        "total": 0.03
+      },
+      "embed_tokens": 0,
+      "embed_cost_inr": null,
+      "retrieved": [],
+      "recall@1": null,
+      "recall@3": null,
+      "recall@5": null,
+      "recall@10": null,
+      "recall@candidates": null,
+      "precision@3": null,
+      "precision@5": null,
+      "mrr": null,
+      "ndcg@5": null,
+      "abstention_correct": true
+    },
+    {
+      "id": "rag_eval_035",
+      "category": "direct_factual",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "What pain points do your customers usually come to you with?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0328,
+      "total_ms": 267.1,
+      "stage_ms": {
+        "index": 0.62,
+        "cache_lookup": 0.17,
+        "embed": 264.43,
+        "search": 0.17,
+        "rerank": 0.02,
+        "total": 266.63
+      },
+      "embed_tokens": 12,
+      "embed_cost_inr": 2.12e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0328
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.032
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 4,
+          "score": 0.0159
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.3333333333333333,
+      "precision@5": 0.3333333333333333,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    },
+    {
+      "id": "rag_eval_036",
+      "category": "contextual",
+      "difficulty": "medium",
+      "answerable": true,
+      "question": "What kind of organisation is the best fit for you?",
+      "abstained": false,
+      "abstain_reason": "",
+      "degraded": false,
+      "cache_hit": false,
+      "n_candidates": 17,
+      "n_hits": 3,
+      "top_score": 0.0323,
+      "total_ms": 290.54,
+      "stage_ms": {
+        "index": 0.83,
+        "cache_lookup": 0.17,
+        "embed": 287.66,
+        "search": 0.15,
+        "rerank": 0.02,
+        "total": 290.06
+      },
+      "embed_tokens": 11,
+      "embed_cost_inr": 1.943e-05,
+      "retrieved": [
+        {
+          "doc": "dhronai_profile",
+          "chunk": 3,
+          "score": 0.0323
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 2,
+          "score": 0.0315
+        },
+        {
+          "doc": "dhronai_profile",
+          "chunk": 1,
+          "score": 0.0161
+        }
+      ],
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "recall@candidates": 1.0,
+      "precision@3": 0.6666666666666666,
+      "precision@5": 0.6666666666666666,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "over_abstained": false,
+      "citation_accuracy": 1.0,
+      "n_citations": 3
+    }
+  ]
+}

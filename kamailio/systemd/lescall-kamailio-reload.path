@@ -1,0 +1,13 @@
+# Fallback live-reload path for the Kamailio carrier ACL: if the dashboard
+# cannot reach the kamcmd ctl socket directly, shared/kamailio_acl.py touches
+# the trigger file below and this unit converts that into an addressReload.
+# Install: cp to /etc/systemd/system/ && systemctl enable --now lescall-kamailio-reload.path
+[Unit]
+Description=Watch for LesCall Kamailio ACL reload trigger
+
+[Path]
+PathModified=/home/angelo/lescall/data/kamailio_reload
+Unit=lescall-kamailio-reload.service
+
+[Install]
+WantedBy=multi-user.target

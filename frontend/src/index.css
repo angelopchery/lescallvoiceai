@@ -1,0 +1,386 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/plus-jakarta-sans';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light theme — cool paper tinted toward the namaskall navy, gold as the mark */
+  --bg: #f4f6fb;
+  --bg-2: #e8eef6;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-solid: #ffffff;
+  --surface-2: #eef2f8;
+  --border: rgba(13, 40, 80, 0.09);
+  --border-strong: rgba(13, 40, 80, 0.16);
+  --text: #0e2244;
+  --text-soft: #3a4d68;
+  --text-dim: #5c6d84; /* ≥4.5:1 on white — carries real data at 10-12px */
+  --accent: #f8b800;
+  --accent-2: #0d2850;
+  --shadow: 0 4px 30px rgba(13, 40, 80, 0.06), 0 1px 2px rgba(13, 40, 80, 0.04);
+  --spotlight: rgba(248, 184, 0, 0.10);
+  /* Tells the browser which palette to paint native UI with: <select> popups,
+     scrollbars, date pickers, autofill. Without it every popup is painted on a
+     white canvas regardless of theme — see the `option` rule below. */
+  color-scheme: light;
+}
+
+.dark {
+  /* Navy theme — the logo field, with the same gold mark */
+  --bg: #071428;
+  --bg-2: #0a1c36;
+  --surface: rgba(14, 36, 72, 0.72);
+  --surface-solid: #0e2448;
+  --surface-2: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --text: #f4f7fb;
+  --text-soft: #c5d0e0;
+  --text-dim: #8fa0b8;
+  --accent: #f8b800;
+  --accent-2: #9eb4d4;
+  --shadow: 0 18px 60px -20px rgba(0, 0, 0, 0.7), 0 2px 10px rgba(0, 0, 0, 0.4);
+  --spotlight: rgba(248, 184, 0, 0.08);
+  color-scheme: dark;
+}
+
+/**
+ * Shell geometry — where the app chrome ends and the content region begins.
+ * Overlays that should sit *inside* the shell (keeping the sidebar and topbar
+ * visible and clickable) inset themselves by these instead of hardcoding the
+ * numbers, so collapsing the sidebar moves them automatically.
+ *
+ *   --shell-nav-w    left edge of the content region (0 on mobile: the sidebar
+ *                    is an overlay drawer there, not a reserved column)
+ *   --shell-top-h    height of the sticky topbar (h-14)
+ *
+ * Mirrors AppShell's lg:pl-[260px] / lg:pl-[92px]; `data-nav` is stamped on
+ * <html> by AppShell.
+ */
+:root {
+  --shell-nav-w: 0px;
+  --shell-top-h: 3.5rem;
+}
+@media (min-width: 1024px) {
+  :root { --shell-nav-w: 260px; }
+  :root[data-nav="collapsed"] { --shell-nav-w: 92px; }
+}
+
+* { border-color: var(--border); }
+
+/* Keyboard users get a visible ring everywhere; mouse clicks stay clean. */
+:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: 'Inter Variable', Inter, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; border: 3px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); background-clip: content-box; }
+
+/* Native <select> popups.
+
+   The dropdown list is painted by the OS, not by us, so it does not inherit the
+   control's Tailwind classes. In dark mode that left --text (near-white) as the
+   inherited option colour on the browser's default white popup canvas: white on
+   white, legible only under the hover highlight.
+
+   color-scheme (set on :root/.dark above) fixes this on its own wherever the
+   platform honours it. These rules are the belt-and-braces half, because they
+   must be OPAQUE: --surface-2 is rgba(255,255,255,0.05) in dark mode, and a
+   translucent option background composites straight back to white. */
+option,
+optgroup {
+  background-color: var(--surface-solid);
+  color: var(--text);
+}
+option:disabled { color: var(--text-dim); }
+
+@layer components {
+  /* Translucent, blurred surface — the name means what it says again. */
+  .glass {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+  }
+  .card {
+    @apply glass rounded-2xl;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-hover { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s; }
+  /* Hover motion is pointer-only: on touch screens a tap would leave the
+     card stuck mid-lift until the next tap elsewhere. */
+  @media (hover: hover) and (pointer: fine) {
+    .card-hover:hover { transform: translateY(-2px); box-shadow: var(--shadow), 0 24px 60px -28px rgba(15,23,42,.25); }
+  }
+  /* Section label: quiet, sentence-case, a touch of tracking. */
+  .eyebrow { @apply text-[11px] font-medium tracking-[0.05em]; color: var(--text-dim); }
+  .metric { font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',Inter,sans-serif; @apply font-bold tracking-tight; color: var(--text); }
+  .surface-2 { background: var(--surface-2); }
+}
+
+.text-soft { color: var(--text-soft); }
+.text-dim { color: var(--text-dim); }
+
+.skeleton {
+  position: relative; overflow: hidden; background: var(--surface-2); border-radius: 8px;
+}
+.skeleton::after {
+  content: ''; position: absolute; inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { 100% { transform: translateX(100%) } }
+
+/* ── Motion layer ─────────────────────────────────────────────────────────
+   Lenis smooth scroll + the Inspira-ported effects (components/motion.tsx).
+   Everything here dies under the global prefers-reduced-motion rule; the
+   border beam is hidden outright because a frozen beam reads as a glitch. */
+
+/* Lenis base styles (window scroller). */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Pointer-tracking highlight on hoverable cards (Card writes --spot-x/y). */
+.card-spotlight {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  transition: opacity .35s ease;
+  background: radial-gradient(320px circle at var(--spot-x, 50%) var(--spot-y, 40%),
+    var(--spotlight), transparent 70%);
+}
+/* Pointer-only for the same reason as .card-hover: a tap on touch screens
+   would pin a centered glow (the --spot vars only update on mouse moves). */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover > .card-spotlight { opacity: 1; }
+}
+
+/* Border beam — a light tracing the card edge. One per screen, max. */
+@property --beam-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.border-beam {
+  position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
+  pointer-events: none; opacity: .9;
+  background: conic-gradient(from var(--beam-angle),
+    transparent 60%, var(--beam-from, var(--accent)) 82%,
+    var(--beam-to, var(--accent-2)) 93%, transparent 98%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask-composite: exclude;
+  animation: beam-spin var(--beam-duration, 7s) linear infinite;
+}
+@keyframes beam-spin { to { --beam-angle: 360deg; } }
+@media (prefers-reduced-motion: reduce) { .border-beam { display: none; } }
+
+/* Touch devices at desktop widths (iPads): row actions that hide behind
+   group-hover at md:/lg: have no hover to reveal them — keep them visible.
+   md:opacity-0 / lg:opacity-0 are only ever used for this reveal idiom. */
+@media (hover: none) {
+  .md\:opacity-0, .lg\:opacity-0 { opacity: 1 !important; }
+}
+
+/* Shimmering text for in-progress states ("Thinking…"). */
+.text-shimmer {
+  background: linear-gradient(90deg, var(--text-dim) 40%, var(--text) 50%, var(--text-dim) 60%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: text-shimmer 2.2s linear infinite;
+}
+@keyframes text-shimmer { to { background-position: -200% 0; } }
+
+/* Rendered report documents (Reports page, minimal markdown renderer). */
+.report-doc { color: var(--text-soft); font-size: 13.5px; line-height: 1.65; }
+.report-doc h2 { font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',Inter,sans-serif;
+  font-weight: 700; font-size: 20px; letter-spacing: -0.02em; color: var(--text); margin: 4px 0 12px; }
+.report-doc h3 { font-weight: 700; font-size: 15px; color: var(--text); margin: 20px 0 8px; }
+.report-doc h4, .report-doc h5 { font-weight: 600; font-size: 13.5px; color: var(--text); margin: 14px 0 6px; }
+.report-doc p { margin: 0 0 10px; }
+.report-doc ul { margin: 0 0 12px; padding-left: 20px; list-style: disc; }
+.report-doc li { margin: 3px 0; }
+.report-doc hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+.report-doc code { background: var(--surface-2); border-radius: 4px; padding: 1px 5px; font-size: 12px; }
+.report-doc .md-table { overflow-x: auto; margin: 0 0 12px; }
+.report-doc table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+.report-doc th, .report-doc td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+.report-doc th { background: var(--surface-2); color: var(--text); font-weight: 600; }
+
+/* ── shadcn/ui tokens ─────────────────────────────────────────────────────
+   HSL triplets (not full colors): tailwind.config wraps them as
+   hsl(var(--x)), which is what keeps opacity modifiers (bg-primary/90)
+   working on Tailwind v3. --ui-border / --ui-accent are namespaced because
+   the app's :root above already owns --border and --accent (brand emerald) —
+   sharing names would leak the emerald into component hover states.
+   Values are the zinc palette, dark values tuned to sit on the obsidian
+   theme (--bg #070a12 / surfaces #111726) rather than stock zinc. */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --ui-accent: 240 4.8% 95.9%;
+    --ui-accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --ui-border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    /* Focus ring matches the app's global :focus-visible (indigo accent) so
+       shadcn and native controls speak one focus language. */
+    --ring: 243 75% 59%;
+    /* Brand-aligned categorical palette: 1 mint · 2 indigo · 3 amber · 4 rose
+       · 5 neutral. Consumed only via src/lib/chartColors.ts. */
+    /* chart-3 sits at L 48% not 50%: at 50% (#f59f0a) it measured OKLCH L 0.77,
+       just outside the 0.43–0.77 categorical band. 48% (#eb980a) is inside it
+       and keeps amber↔rose CVD separation at ΔE 20.4 normal / 11.5 protan. */
+    --chart-1: 160 84% 39%;
+    --chart-2: 243 75% 59%;
+    --chart-3: 38 92% 48%;
+    --chart-4: 350 89% 60%;
+    --chart-5: 226 15% 56%;
+    --radius: 0.75rem;
+    --sidebar: 0 0% 98.5%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 240 5.9% 10%;
+  }
+  .dark {
+    --background: 225 44% 5%;
+    --foreground: 228 14% 95%;
+    --card: 222 29% 11%;
+    --card-foreground: 228 14% 95%;
+    --popover: 222 29% 11%;
+    --popover-foreground: 228 14% 95%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 5% 16%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 5% 16%;
+    --muted-foreground: 228 8% 58%;
+    --ui-accent: 240 5% 16%;
+    --ui-accent-foreground: 0 0% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --ui-border: 0 0% 100% / 0.09;
+    --input: 0 0% 100% / 0.15;
+    --ring: 243 100% 76%;
+    --chart-1: 158 100% 48%;
+    --chart-2: 243 100% 76%;
+    --chart-3: 43 96% 56%;
+    --chart-4: 351 95% 71%;
+    /* Lightened from 228 8% 58%: against dark rose (--chart-4) the old step
+       measured protanopic ΔE 3.4 — a protanope could not tell "neutral" from
+       "negative" in the sentiment stack at all. 220 10% 66% raises it to 7.3,
+       which the 6-8 band permits given the 2px segment gaps + legend + table
+       view those charts ship with. */
+    --chart-5: 220 10% 66%;
+    --sidebar: 222 29% 11%;
+    --sidebar-foreground: 228 14% 95%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 240 5.9% 10%;
+    --sidebar-accent: 240 5% 16%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 100% / 0.09;
+    --sidebar-ring: 240 4.9% 83.9%;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   PRINT — the API reference at /api-docs is a document people are expected to
+   save as a PDF and send to a CRM vendor, so it needs a real print treatment.
+   Scoped to `body.printing-doc`, which only ApiDocs sets while it is mounted:
+   printing any other panel keeps the browser's default behaviour.
+
+   The visibility trick (hide everything, re-show the marked subtree) is used
+   instead of `display:none` on the shell because the sidebar and topbar are
+   ancestors-of-siblings in a Tailwind layout whose class names are arbitrary
+   values — matching them in CSS would break the first time one is edited.
+--------------------------------------------------------------------------- */
+@media print {
+  body.printing-doc {
+    /* Ink, not screen: the mesh gradient and dark theme both waste toner and
+       lose contrast on paper. */
+    background: #fff !important;
+    color: #101014 !important;
+  }
+  body.printing-doc * { visibility: hidden; }
+  body.printing-doc [data-print-root],
+  body.printing-doc [data-print-root] * { visibility: visible; }
+  body.printing-doc [data-print-root] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0;
+  }
+  body.printing-doc [data-print-hide],
+  body.printing-doc [data-print-hide] * { display: none !important; }
+
+  /* Force the light palette regardless of the reader's theme. */
+  body.printing-doc [data-print-root] {
+    --bg: #fff; --surface: #fff; --surface-solid: #fff; --surface-2: #f4f6f8;
+    --text: #101014; --text-soft: #33363f; --text-dim: #5d6270;
+    --border: #d9dde3; --border-strong: #c3c9d2;
+  }
+  body.printing-doc [data-print-root] * {
+    background-image: none !important;   /* the mesh gradient wastes toner */
+    box-shadow: none !important;
+  }
+  /* Deliberately NOT `color: inherit` on every node — that would flatten the
+     hierarchy the tokens above already remapped to ink, and would grey out the
+     colour-coded HTTP verb chips that make the endpoint list scannable. */
+
+  /* Keep a heading with the text it introduces, and never split a code block,
+     a callout or an endpoint card across a page. */
+  body.printing-doc h1,
+  body.printing-doc h2,
+  body.printing-doc h3 { break-after: avoid-page; }
+  body.printing-doc section { break-inside: auto; }
+  body.printing-doc pre,
+  body.printing-doc table,
+  body.printing-doc .break-inside-avoid { break-inside: avoid; }
+  body.printing-doc tr { break-inside: avoid; }
+  body.printing-doc a[href^="http"]::after { content: ""; }  /* no URL noise */
+
+  @page { margin: 16mm 14mm; }
+}

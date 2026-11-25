@@ -1,0 +1,238 @@
+# LesCall application services — production containers.
+#   docker compose -f deploy/docker-compose.services.yml up -d --build
+#
+# Design notes:
+# - api / runtime / workers share ONE image (deploy/Dockerfile.app) and run on
+#   the HOST network: FreeSWITCH dials 127.0.0.1:9000/9001 and nginx proxies
+#   127.0.0.1:8080, exactly as before containerization — zero telephony or
+#   nginx config changes. Postgres stays in its own compose
+#   (docker-compose.postgres.yml) — never recreate the DB container casually.
+# - The repo is bind-mounted at /app (code + mutable state: recordings/,
+#   agents/, json stores). Deploying code = `docker compose restart <svc>`;
+#   rebuilding the image is only needed when requirements.txt changes.
+# - Containers run as uid 1000 (angelo) so files keep host ownership; workers
+#   join gid 994 (freeswitch) to read CDRs for billing reconciliation.
+# - FreeSWITCH, Kamailio, host nginx, and the Sarvam key-rotation scripts
+#   intentionally stay on the host (out of scope per plan).
+
+services:
+  api:
+    image: lescall-app:latest
+    build: { context: .., dockerfile: deploy/Dockerfile.app }
+    container_name: lescall-api
+    network_mode: host
+    user: "1000:1000"
+    # freeswitch group: "Apply" on a BYON trunk writes the generated gateway
+    # and dialplan XML into /etc/freeswitch/{sip_profiles/external,dialplan/public},
+    # which are freeswitch:freeswitch drwxrwxr-x. Without this the whole BYON
+    # flow ends in a 500 at the final step — trunk and number save fine, then
+    # apply cannot write. (uid 1000 is already a member on the host.)
+    group_add: ["994"]
+    working_dir: /home/angelo/lescall/dashboard
+    command: ["python", "server.py"]
+    # Secrets live OUTSIDE the repo (/etc/lescall, root 0600) because the repo
+    # is bind-mounted into every container as uid 1000 — see
+    # deploy/etc-lescall-env.template. `required: false` so a host that has not
+    # created them yet still boots: the billing layer degrades honestly.
+    env_file:
+      - .pg_env
+      - path: /etc/lescall/telephony.env
+        required: false
+      - path: /etc/lescall/billing.env
+        required: false
+    environment:
+      # Google auth comes from the VM metadata server (attached service
+      # account lescall-recsync, cloud-platform scope) — no key file, no
+      # human session, tokens auto-refresh forever. Do NOT reintroduce
+      # GOOGLE_APPLICATION_CREDENTIALS: an explicit path takes PRECEDENCE
+      # over metadata ADC, so a stale file there silently defeats the
+      # attached SA. That is exactly what rotted 2026-07-14 → 07-31
+      # (expired user ADC, 270 recordings stranded local-only).
+      GOOGLE_CLOUD_PROJECT: lescall
+    volumes:
+      - /home/angelo/lescall:/home/angelo/lescall
+      # BYON trunk "Apply" generates FreeSWITCH gateway + dialplan XML here and
+      # then reloads FS over ESL. The directory does not exist inside the
+      # container without this mount, so the write failed with EACCES at the
+      # container root and every apply returned 500.
+      - /etc/freeswitch:/etc/freeswitch
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://127.0.0.1:8080/login"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging: &log
+      driver: json-file
+      options: { max-size: "20m", max-file: "5" }
+
+  runtime:
+    image: lescall-app:latest
+    build: { context: .., dockerfile: deploy/Dockerfile.app }
+    container_name: lescall-runtime
+    network_mode: host
+    user: "1000:1000"
+    # freeswitch group: the record_session WAVs in /tmp/esl_recordings are
+    # freeswitch:freeswitch 0660; without this the teardown capture of the
+    # two-party recording fails with EACCES (recsync in workers then catches
+    # up ~15 min later — recordings appear caller-only in the meantime).
+    group_add: ["994"]
+    working_dir: /home/angelo/lescall
+    command: ["bash", "deploy/runtime_entry.sh"]
+    # Telephony secrets only. The runtime container handles live calls and must
+    # NEVER see payment credentials — billing.env is deliberately absent here.
+    env_file:
+      - .pg_env
+      - path: /etc/lescall/telephony.env
+        required: false
+    environment:
+      # Google auth comes from the VM metadata server (attached service
+      # account lescall-recsync, cloud-platform scope) — no key file, no
+      # human session, tokens auto-refresh forever. Do NOT reintroduce
+      # GOOGLE_APPLICATION_CREDENTIALS: an explicit path takes PRECEDENCE
+      # over metadata ADC, so a stale file there silently defeats the
+      # attached SA. That is exactly what rotted 2026-07-14 → 07-31
+      # (expired user ADC, 270 recordings stranded local-only).
+      GOOGLE_CLOUD_PROJECT: lescall
+      TELEPHONY_MODE: "true"
+      # ── Continuation-merge canary (2026-07-23, RUNBOOK §11) ──────────────
+      # Pause-tolerant turns + the faster 400ms silence endpoint they enable
+      # (was 560ms — a guaranteed 160ms saved per turn). Owner-approved
+      # canary; validate on the next test call by grepping ws_audio_receiver
+      # for [CONT-MERGE] lines and clean rollbacks. ROLLBACK: delete these
+      # two lines and `docker compose up -d runtime` — behavior returns to
+      # exactly pre-canary (10 rollback tests + no-filler-replay pin green).
+      ENABLE_CONTINUATION_MERGE: "true"
+      HARD_FLUSH_SILENCE_FRAMES: "20"
+      # ── WebSocket streaming STT: REMOVED 2026-07-31 (owner request) ──────
+      # ENABLE_STREAMING_STT lived here from 2026-07-29. The flag is gone
+      # because the provider itself is gone — stt/sarvam_stream.py and
+      # stt/sarvam_ws.py were deleted and the bridge now always builds
+      # TrackingSarvamSTT (batch multipart POST to
+      # api.sarvam.ai/speech-to-text). Setting the variable here does
+      # NOTHING; nothing reads it. Re-introducing streaming means restoring
+      # the provider from git history, not adding a line back. RUNBOOK §24.
+      #
+      # ── Native LLM tool calling LIVE (2026-07-29) — deliberately KEPT ────
+      # Independent of STT. Gated execution on the main LLM call (record/
+      # book/callback/dnd/end_call as validated proposals; stages still
+      # advance only in code). ROLLBACK: delete this line and `up -d runtime`
+      # — tools return to the per-agent YAML default (shadow). Verify: [TOOLS].
+      LLM_TOOLS_MODE: "on"
+      # ── VAD stack LIVE (2026-07-30, PLAN-vad-stack.md) ───────────────────
+      # WebRTC pre-filter → FSMN-VAD model (vendored onnx) + semantic
+      # EndpointController + audio-event classifier + shadow session FSM.
+      # Kills the 500ms calibration deafness and the amplitude floor for
+      # quiet callers. ROLLBACK: delete this line + `up -d runtime` —
+      # energy VAD + fixed 400ms hard flush return exactly as before.
+      VAD_ENGINE: "fsmn"
+    volumes:
+      - /home/angelo/lescall:/home/angelo/lescall
+      - /tmp/esl_recordings:/tmp/esl_recordings
+      # TTS playback WAVs: the bridge writes them, socket_server passes the
+      # path to FreeSWITCH on the HOST — must be the same directory or every
+      # call is silent (FILE NOT FOUND). Learned the hard way 2026-07-14.
+      - /tmp/ai_telephony_playback:/tmp/ai_telephony_playback
+    restart: unless-stopped
+    healthcheck:
+      # Process liveness via pidfiles — NEVER a TCP probe: raw connects to
+      # 9000/9001 trip socket_server's per-connection ESL logic and the WS
+      # server's handshake-error logging every 30s (learned the hard way).
+      test: ["CMD", "bash", "-c", "kill -0 $(cat /tmp/socket_server.pid) && kill -0 $(cat /tmp/ws_audio_receiver.pid)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 25s
+    logging: *log
+
+  workers:
+    image: lescall-app:latest
+    build: { context: .., dockerfile: deploy/Dockerfile.app }
+    container_name: lescall-workers
+    network_mode: host
+    user: "1000:1000"
+    group_add: ["994"]   # freeswitch — read CDR csv for billing reconciliation
+    working_dir: /home/angelo/lescall
+    command: ["bash", "deploy/workers_entry.sh"]
+    # Workers run the billing sync/dunning pass, so they need Razorpay creds.
+    env_file:
+      - .pg_env
+      - path: /etc/lescall/telephony.env
+        required: false
+      - path: /etc/lescall/billing.env
+        required: false
+    environment:
+      # Google auth comes from the VM metadata server (attached service
+      # account lescall-recsync, cloud-platform scope) — no key file, no
+      # human session, tokens auto-refresh forever. Do NOT reintroduce
+      # GOOGLE_APPLICATION_CREDENTIALS: an explicit path takes PRECEDENCE
+      # over metadata ADC, so a stale file there silently defeats the
+      # attached SA. That is exactly what rotted 2026-07-14 → 07-31
+      # (expired user ADC, 270 recordings stranded local-only).
+      GOOGLE_CLOUD_PROJECT: lescall
+    volumes:
+      - /home/angelo/lescall:/home/angelo/lescall
+      - /var/log/freeswitch/cdr-csv:/var/log/freeswitch/cdr-csv:ro
+      # FS record_session staging: recsync catch-up copies full two-party
+      # recordings from here; cleanup_local prunes stragglers (needs rw).
+      - /tmp/esl_recordings:/tmp/esl_recordings
+    restart: unless-stopped
+    logging: *log
+
+  # Super-admin plane (plan §8). Deliberately NOT reachable from the internet:
+  # no nginx vhost, no DNS record, no firewall opening. Primary interface is a
+  # UNIX domain socket, which an HTTP-URL SSRF cannot address at all; an
+  # optional 127.0.0.1 TCP bind can be enabled in /etc/lescall/admin.env for
+  # convenience. Reach it with:
+  #     ssh -L 8090:127.0.0.1:8090 angelo@35.207.225.237
+  # The app refuses to start without a >=32-char ADMIN_TOKEN, and refuses to
+  # bind anything that is not the socket or loopback.
+  admin:
+    image: lescall-app:latest
+    build: { context: .., dockerfile: deploy/Dockerfile.app }
+    container_name: lescall-admin
+    network_mode: host
+    user: "1000:1000"
+    # freeswitch group + the /etc/freeswitch mount + telephony.env below: the
+    # SAME three things the api needs, and for the same reason. /admin/telephony
+    # Connect/Disconnect/Remove write the gateway and dialplan XML and then
+    # reload FS over ESL. Without all three the console writes nothing
+    # (PermissionError at the container root, because /etc/freeswitch does not
+    # exist inside the container) and could not reload even if it had
+    # (no FS_ESL_PASSWORD, and fs_cli is not installed in the app image).
+    # The DB half of every action would still succeed — which is worse than
+    # failing outright: the number would look connected and answer nothing.
+    group_add: ["994"]
+    working_dir: /home/angelo/lescall/dashboard
+    command: ["python", "admin_app.py"]
+    env_file:
+      - .pg_env
+      - path: /etc/lescall/admin.env
+        required: false
+      - path: /etc/lescall/telephony.env
+        required: false
+      - path: /etc/lescall/billing.env
+        required: false
+    environment:
+      # Small pool: Postgres is max_connections=30 and shared with api,
+      # runtime and workers. The admin plane is a single operator.
+      LESCALL_ADMIN_SOCKET: /run/lescall-admin/lescall-admin.sock
+    volumes:
+      - /home/angelo/lescall:/home/angelo/lescall
+      # Socket directory, created by the operator:
+      #   sudo install -d -m 0770 -o angelo -g angelo /run/lescall-admin
+      - /run/lescall-admin:/run/lescall-admin
+      # Generated gateway + dialplan XML for /admin/telephony Connect.
+      - /etc/freeswitch:/etc/freeswitch
+    restart: unless-stopped
+    logging: *log
+
+  spa:
+    image: lescall-dashboard:latest
+    build: { context: ../frontend }
+    container_name: lescall-dashboard
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    ports: ["127.0.0.1:8081:80"]
+    restart: unless-stopped
+    logging: *log

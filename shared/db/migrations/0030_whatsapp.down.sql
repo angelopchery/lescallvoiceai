@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS wa_webhook_events;
+DROP TABLE IF EXISTS wa_inbound;
+DROP TABLE IF EXISTS wa_links;
+DROP TABLE IF EXISTS wa_sends;
+DROP TABLE IF EXISTS wa_consents;
+DROP TABLE IF EXISTS wa_playbooks;
+DROP TABLE IF EXISTS wa_media;
+DROP TABLE IF EXISTS wa_templates;
+DROP TABLE IF EXISTS wa_accounts;
